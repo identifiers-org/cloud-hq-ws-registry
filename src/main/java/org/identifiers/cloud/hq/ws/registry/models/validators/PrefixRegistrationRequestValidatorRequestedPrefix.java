@@ -35,9 +35,11 @@ public class PrefixRegistrationRequestValidatorRequestedPrefix implements Prefix
     public boolean validate(ServiceRequestRegisterPrefixPayload request) throws PrefixRegistrationRequestValidatorException {
         if (request.getRequestedPrefix() == null) {
             logger.error("Invalid request for validating Requested Prefix, WITHOUT specifying a prefix");
+            // TODO In future iterations, use a different mechanism for reporting back why this is not valid, and leave exceptions for non-recoverable conditions
             throw new PrefixRegistrationRequestValidatorException("MISSING Preferred Prefix");
         } else if (request.getRequestedPrefix().length() == 0) {
             logger.error("Invalid request for validating Requested Prefix, empty prefix");
+            // TODO In future iterations, use a different mechanism for reporting back why this is not valid, and leave exceptions for non-recoverable conditions
             throw new PrefixRegistrationRequestValidatorException("Requested prefix cannot be empty");
         } else {
             // TODO: Must confirm this is the right pattern for prefixes.
@@ -46,6 +48,7 @@ public class PrefixRegistrationRequestValidatorRequestedPrefix implements Prefix
 
             if (!matcher.matches()) {
                 logger.error("Invalid request for validating Requested Prefix, wrong prefix");
+                // TODO In future iterations, use a different mechanism for reporting back why this is not valid, and leave exceptions for non-recoverable conditions
                 throw new PrefixRegistrationRequestValidatorException("Requested prefix can only contain lowercase " +
                         "characters, numbers, underscores and dots");
             }

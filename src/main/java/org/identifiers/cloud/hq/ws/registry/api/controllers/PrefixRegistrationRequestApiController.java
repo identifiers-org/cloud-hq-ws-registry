@@ -3,6 +3,8 @@ package org.identifiers.cloud.hq.ws.registry.api.controllers;
 import org.identifiers.cloud.hq.ws.registry.api.models.PrefixRegistrationRequestApiModel;
 import org.identifiers.cloud.hq.ws.registry.api.requests.ServiceRequestRegisterPrefix;
 import org.identifiers.cloud.hq.ws.registry.api.requests.ServiceRequestRegisterPrefixSessionEvent;
+import org.identifiers.cloud.hq.ws.registry.api.responses.ServiceResponseRegisterPrefix;
+import org.identifiers.cloud.hq.ws.registry.api.responses.ServiceResponseRegisterPrefixSessionEvent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,15 +29,14 @@ public class PrefixRegistrationRequestApiController {
 
     @PostMapping(value = "/registerPrefix")
     public ResponseEntity<?> registerPrefix(@RequestBody ServiceRequestRegisterPrefix request) {
-        // TODO Model delegation
-        return new ResponseEntity<>("registerPrefix()", HttpStatus.OK);
+        ServiceResponseRegisterPrefix response = model.registerPrefix(request);
+        return new ResponseEntity<>(response, response.getHttpStatus());
     }
 
-    // TODO - Amend prefix registration request
     @PostMapping(value = "/amendPrefixRegistrationRequest/{sessionId}")
     public ResponseEntity<?> amendPrefixRegistrationRequest(@PathVariable long sessionId, @RequestBody ServiceRequestRegisterPrefixSessionEvent request) {
-        // TODO Model delegation
-        return new ResponseEntity<>("amendPrefixRegistrationRequest()", HttpStatus.OK);
+        ServiceResponseRegisterPrefixSessionEvent response = model.amendPrefixRegistrationRequest(sessionId, request);
+        return new ResponseEntity<>(response, response.getHttpStatus());
     }
 
     // TODO - Comment on prefix registration request

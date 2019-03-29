@@ -20,6 +20,7 @@ public class PrefixRegistrationRequestValidatorRequester implements PrefixRegist
     @Override
     public boolean validate(ServiceRequestRegisterPrefixPayload request) throws PrefixRegistrationRequestValidatorException {
         if (request.getRequester() == null) {
+            // TODO In future iterations, use a different mechanism for reporting back why this is not valid, and leave exceptions for non-recoverable conditions
             throw new PrefixRegistrationRequestValidatorException("MISSING REQUIRED Requester information");
         }
         // Delegate validation to specialized validator
