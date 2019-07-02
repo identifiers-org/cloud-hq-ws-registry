@@ -7,6 +7,8 @@ import pandas as pd
 
 from halo import Halo
 
+from config import config
+
 
 def init_config(config_file_name):
   spinner = Halo(text='Initializing config', spinner='dots')
@@ -15,13 +17,17 @@ def init_config(config_file_name):
   # Decides where are we working on.
   env = os.getenv('ENV') or 'DEV'
 
-  # Fetches config.
-  config = configparser.ConfigParser()
-  config.read_file(open(config_file_name))
-
   spinner.info(f'Using {env} environment.')
 
-  return config[env]
+  # Fetches config.
+  config_file_contents = configparser.ConfigParser()
+  config_file_contents.read_file(open(config_file_name))
+
+  config['data_origin_url'] = config_file_contents.get('DEFAULT', 'DataOriginURL')
+  config['destination_url'] = config_file_contents.get(env, 'DestinationURL')
+  config['keycloak_url'] = config_file_contents.get(env, 'KeycloakURL')
+  config['mirid_controller_url'] = config_file_contents.get(env, 'mirIDControllerURL')
+  config['EMPTY_FIELD_LITERAL'] = config_file_contents.get(env, 'EmptyFieldLiteral')
 
 
 def init_args():
@@ -34,6 +40,8 @@ def init_args():
   parser.add_argument('-z', '--mintidsfornamespaces', action='store_true', help='Populate miriams for imported namespaces.')
   parser.add_argument('-n', '--skipnamespaces', action='store_true', help='Skip namespace population (use along -m).')
   parser.add_argument('-l', '--skiplocations', action='store_true', help='Skip location population.')
+  parser.add_argument('-a', '--auth', action='store', nargs=2, help='Authenticate using the given username and password.')
+
   return parser.parse_args()
 
 

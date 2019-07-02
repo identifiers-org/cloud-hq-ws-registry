@@ -5,6 +5,9 @@ import urllib
 
 from halo import Halo
 
+from config import config
+
+
 # Fetch old data from identifiers.org.
 def fetch_old_data(originURL):
     spinner = Halo(text='Fetching namespace data from identifiers.org...', spinner='dots')
@@ -30,7 +33,7 @@ def load_mirid(mir_id):
     spinner = Halo(text=f'└─ Loading [MIR ID] "{mir_id}"', spinner='dots')
     spinner.start()
 
-    response = requests.get(f'http://127.0.0.1:8181/mirIdApi/loadId/{mir_id}')
+    response = requests.get(f"{config['mirid_controller_url']}/loadId/{mir_id}")
 
     if (response.status_code == 200):
         spinner.succeed(text=f'└─ Loading [MIR ID] "{mir_id}" → [OK]')
@@ -50,12 +53,12 @@ def load_old_data(data_file_name):
 
 
 # Get a resource from the rest service.
-def do_get(where, what, by, destination_url):
+def do_get(where, what, by):
     spinner = Halo(text=f'└─ Getting [{where}] \"{what}\"...', spinner='dots')
 
     what_param = urllib.parse.quote(what)
 
-    response = requests.get(f"{destination_url}{where}/search/{by}?{by[6].lower() + by[7:]}={what_param}")
+    response = requests.get(f"{config['destination_url']}{where}/search/{by}?{by[6].lower() + by[7:]}={what_param}")
 
     # Converts 404 responses to empty resources.
     if (response.status_code == 404):
@@ -72,10 +75,10 @@ def do_get(where, what, by, destination_url):
 
 
 # Post a payload on the rest service.
-def do_post(payload, what, where, skip_existing, destination_url):
+def do_post(payload, what, where, skip_existing):
     spinner = Halo(text=f'└─ Posting [{where}] \"{what}\"...', spinner='dots')
-
-    response = requests.post(f'{destination_url}{where}', json=payload)
+    headers = {'Authorization': f'Bearer {config["access_token"]}'}
+    response = requests.post(f"{config['destination_url']}{where}", headers=headers, json=payload)
 
     if (response.status_code == 403):
         spinner.fail(spinner.text[:-3] + ' → [FORBIDDEN]')
@@ -87,20 +90,19 @@ def do_post(payload, what, where, skip_existing, destination_url):
             return
 
     response_json = json.loads(response.text)
-
     spinner.succeed(spinner.text[:-3] + f' → [{response.status_code}]: \"{response_json["_links"]["self"]["href"]}')
 
     return response_json
 
 
 # Attempts to fetch resource, and post if it does not exist.
-def prepare_resource(where, what, by, payload, destination_url):
+def prepare_resource(where, what, by, payload):
     # First try to get the resource.
-    entity = do_get(where, what, by, destination_url)
+    entity = do_get(where, what, by)
 
     # If it does not exist, post it.
     if entity is None:
-        entity = do_post(payload, what, where, False, destination_url)
+        entity = do_post(payload, what, where, False)
 
     # Extracts reference to the location.
     return entity['_links']['self']['href']

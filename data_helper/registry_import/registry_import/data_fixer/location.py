@@ -81,7 +81,7 @@ def map_location(old_location, countries):
     return result
 
 
-def populate_locations(countries, destination_url):
+def populate_locations(countries):
     spinner = Halo(spinner='dots')
     spinner.info(f'Posting {len(countries.index)} locations from ISO-3166:"')
 
@@ -91,5 +91,4 @@ def populate_locations(countries, destination_url):
         _ = prepare_resource('locations',
                              newLocation.countryCode,
                              'findByCountryCode',
-                             newLocation.serialize(),
-                             destination_url)
+                             newLocation.serialize())

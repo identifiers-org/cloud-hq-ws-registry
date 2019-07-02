@@ -1,12 +1,15 @@
 #!/usr/bin/env python3
 
+import argparse
 import configparser
 import os
-import requests
 import sys
 import urllib
-import argparse
+import requests
 
+from halo import Halo
+
+from config import config
 
 from data_fixer import (
     create_bad_pool,
@@ -18,26 +21,30 @@ from data_fixer import (
 
 from tools import fetch_old_data, load_mirid, load_old_data, prepare_resource, do_post
 from tools import init_config, init_args, load_countries
+from tools import keycloak_auth
 
 from classes import Institution, Location, Namespace, Provider, Requester
 
 from data_fixer import mint_used_ids
 
-from halo import Halo
-
 
 # Inits config and argument parser.
 dirname = os.path.dirname(__file__)
-config = init_config(os.path.join(dirname, 'config.ini'))
+init_config(os.path.join(dirname, 'config/config.ini'))
+
+print(config)
+
 args = init_args()
-destination_url = config.get('DestinationURL')
-mirid_controller_url = config.get('mirIDControllerURL')
-EMPTY_FIELD_LITERAL = config.get('EmptyFieldLiteral')
+
+
+# Gets authentication token if auth parameter is set.
+if args.auth is not None:
+    access_token = keycloak_auth(args.auth[0], args.auth[1], config['keycloak_url'])
 
 
 # Fetches data from old identifiers.org.
 if args.datafile is None:
-    namespaces = fetch_old_data(config.get('DataOriginURL'))
+    namespaces = fetch_old_data(config['DataOriginURL'])
 else:
     namespaces = load_old_data(args.datafile)
 
@@ -47,7 +54,7 @@ countries = load_countries(os.path.join(dirname, '../data/ISO-3166.csv'))
 
 if args.skiplocations is False:
     # Populate country list.
-    populate_locations(countries, destination_url)
+    populate_locations(countries)
 
 
 # Main loop:
@@ -68,8 +75,7 @@ if args.skipnamespaces is False:
         namespaceRef = prepare_resource('namespaces',
                                         namespace['prefix'],
                                         'findByPrefix',
-                                        newNamespace.serialize(),
-                                        destination_url)
+                                        newNamespace.serialize())
 
         # Mint id if parameter is set.
         if args.mintidsfornamespaces is True:
@@ -86,36 +92,34 @@ if args.skipnamespaces is False:
                 locationRef = prepare_resource('locations',
                                             location['countryCode'],
                                             'findByCountryCode',
-                                            location,
-                                            destination_url)
+                                            location)
 
             # Post institution for that resource.
             if provider.get('institution') is not None:
                 newInstitution = Institution(name=provider['institution'].strip(),
-                                            homeUrl=EMPTY_FIELD_LITERAL,
-                                            description=EMPTY_FIELD_LITERAL,
+                                            homeUrl=config['EMPTY_FIELD_LITERAL'],
+                                            description=config['EMPTY_FIELD_LITERAL'],
                                             location=locationRef)
 
                 institutionRef = prepare_resource('institutions',
                                                 provider['institution'].strip(),
                                                 'findByName',
-                                                newInstitution.serialize(),
-                                                destination_url)
+                                                newInstitution.serialize())
 
             # Post the provider.
             newProvider = Provider(mirId=provider.get('id').strip(),
-                                urlPattern=provider.get('accessURL', EMPTY_FIELD_LITERAL).strip(),
-                                name=provider.get('info', EMPTY_FIELD_LITERAL).strip(),
-                                description=provider.get('info', EMPTY_FIELD_LITERAL).strip(),
+                                urlPattern=provider.get('accessURL', config['EMPTY_FIELD_LITERAL']).strip(),
+                                name=provider.get('info', config['EMPTY_FIELD_LITERAL']).strip(),
+                                description=provider.get('info', config['EMPTY_FIELD_LITERAL']).strip(),
                                 official=provider.get('official', 'false'),
-                                providerCode=provider.get('resourcePrefix', EMPTY_FIELD_LITERAL).strip(),
-                                sampleId=provider.get('localId', EMPTY_FIELD_LITERAL).strip(),
-                                resourceHomeUrl=provider.get('resourceURL', EMPTY_FIELD_LITERAL).strip(),
+                                providerCode=provider.get('resourcePrefix', config['EMPTY_FIELD_LITERAL']).strip(),
+                                sampleId=provider.get('localId', config['EMPTY_FIELD_LITERAL']).strip(),
+                                resourceHomeUrl=provider.get('resourceURL', config['EMPTY_FIELD_LITERAL']).strip(),
                                 location=locationRef,
                                 institution=institutionRef,
                                 namespace=namespaceRef)
 
-            do_post(newProvider.serialize(), newProvider.name, 'resources', True, config.get('DestinationURL'))
+            do_post(newProvider.serialize(), newProvider.name, 'resources', True)
 
         spinner = Halo(spinner='dots', text_color='green')
         spinner.succeed(f'Namespace [{index}]: \"{newNamespace.name}\" → [SUCCESS]')
