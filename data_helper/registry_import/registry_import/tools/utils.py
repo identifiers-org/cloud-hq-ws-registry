@@ -62,14 +62,3 @@ def load_countries(country_csv_file_name):
   spinner.succeed(f'Got {len(countries)} countries.')
 
   return countries
-
-
-
-
-
-
-  # # Prepare csv reader and skip header.
-  #   csv_reader = csv.reader(country_csv, delimiter=',', quotechar='"')
-  #   next(csv_reader, None)
-
-  #   country_list = {rows[1]:rows[0] for rows in csv_reader}

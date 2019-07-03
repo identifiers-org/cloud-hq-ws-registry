@@ -31,14 +31,15 @@ def fetch_old_data(originURL):
 
 def load_mirid(mir_id):
     spinner = Halo(text=f'└─ Loading [MIR ID] "{mir_id}"', spinner='dots')
+    headers = {'Authorization': f'Bearer {config["access_token"]}'}
     spinner.start()
 
-    response = requests.get(f"{config['mirid_controller_url']}/loadId/{mir_id}")
+    response = requests.get(f"{config['mirid_controller_url']}/loadId/{mir_id}", headers=headers)
 
     if (response.status_code == 200):
         spinner.succeed(text=f'└─ Loading [MIR ID] "{mir_id}" → [OK]')
     else:
-        spinner.fail(text=f'└─ Loading [MIR ID] "{mir_id}" → [ERROR]')
+        spinner.fail(text=f'└─ Loading [MIR ID] "{mir_id}" → [ERROR] {response.status_code}')
 
 
 # Load old data from a file.
@@ -58,7 +59,7 @@ def do_get(where, what, by):
 
     what_param = urllib.parse.quote(what)
 
-    response = requests.get(f"{config['destination_url']}{where}/search/{by}?{by[6].lower() + by[7:]}={what_param}")
+    response = requests.get(f"{config['destination_url']}/{where}/search/{by}?{by[6].lower() + by[7:]}={what_param}")
 
     # Converts 404 responses to empty resources.
     if (response.status_code == 404):
@@ -78,7 +79,7 @@ def do_get(where, what, by):
 def do_post(payload, what, where, skip_existing):
     spinner = Halo(text=f'└─ Posting [{where}] \"{what}\"...', spinner='dots')
     headers = {'Authorization': f'Bearer {config["access_token"]}'}
-    response = requests.post(f"{config['destination_url']}{where}", headers=headers, json=payload)
+    response = requests.post(f"{config['destination_url']}/{where}", headers=headers, json=payload)
 
     if (response.status_code == 403):
         spinner.fail(spinner.text[:-3] + ' → [FORBIDDEN]')

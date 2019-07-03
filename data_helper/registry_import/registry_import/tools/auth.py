@@ -8,7 +8,7 @@ from config import config
 
 # Authenticate against keycloak.
 def keycloak_auth(username, password, keycloak_url):
-    spinner = Halo(text='Authenticating as [{username}]...', spinner='dots')
+    spinner = Halo(text=f'Authenticating as [{username}]...', spinner='dots')
     spinner.start()
 
     print(keycloak_url)

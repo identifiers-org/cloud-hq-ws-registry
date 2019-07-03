@@ -32,8 +32,6 @@ from data_fixer import mint_used_ids
 dirname = os.path.dirname(__file__)
 init_config(os.path.join(dirname, 'config/config.ini'))
 
-print(config)
-
 args = init_args()
 
 
