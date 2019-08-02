@@ -68,6 +68,3 @@ more-itertools = "*"
 requests-async = "*"
 aiohttp = "*"
 asyncio = "*"
-
-[requires]
-python_version = "3.6"
