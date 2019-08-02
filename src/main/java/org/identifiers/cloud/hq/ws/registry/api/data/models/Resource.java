@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * Project: registry
@@ -41,4 +42,9 @@ public class Resource implements Serializable {
     private String resourceHomeUrl;
     private Institution institution;
     private Location location;
+    // This field flags whether the resource has been deprecated or not
+    private boolean deprecated;
+    // Information on when this resource was deprecated
+    private Date deprecationDate;
+
 }

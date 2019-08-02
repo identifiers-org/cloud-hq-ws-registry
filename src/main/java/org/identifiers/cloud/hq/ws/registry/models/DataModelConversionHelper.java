@@ -19,7 +19,7 @@ public class DataModelConversionHelper {
      * @param prefixRegistrationRequest the source for the conversion
      * @return a resource built from the given prefix registration request
      */
-    public static Resource getFrom(PrefixRegistrationRequest prefixRegistrationRequest) {
+    public static Resource getResourceFrom(PrefixRegistrationRequest prefixRegistrationRequest) {
         Resource resource = new Resource();
         Person requester =
                 new Person()
@@ -51,7 +51,36 @@ public class DataModelConversionHelper {
                 .setProviderCode(prefixRegistrationRequest.getProviderCode())
                 .setSampleId(prefixRegistrationRequest.getSampleId())
                 .setResourceHomeUrl(prefixRegistrationRequest.getProviderHomeUrl());
+        return resource;
+    }
 
+    /**
+     * Convert a data model that represents a resource registration request, to a resource data model
+     * @param resourceRegistrationRequest source model conversion
+     * @return a resource representation of the given source model
+     */
+    public static Resource getResourceFrom(ResourceRegistrationRequest resourceRegistrationRequest) {
+        Resource resource = new Resource();
+        Person requester =
+                new Person()
+                        .setFullName(resourceRegistrationRequest.getRequesterName())
+                        .setEmail(resourceRegistrationRequest.getRequesterEmail());
+        // Create and fill in the institution information
+        resource.setInstitution(new Institution()
+                .setName(resourceRegistrationRequest.getInstitutionName())
+                .setDescription(resourceRegistrationRequest.getInstitutionDescription())
+                .setHomeUrl(resourceRegistrationRequest.getInstitutionHomeUrl())
+                .setLocation(new Location().setCountryCode(resourceRegistrationRequest.getInstitutionLocation()))
+        );
+        // Create and fill in the resource (provider) information
+        resource.setLocation(new Location().setCountryCode(resourceRegistrationRequest.getProviderLocation()))
+                .setContactPerson(requester)
+                .setUrlPattern(resourceRegistrationRequest.getProviderUrlPattern())
+                .setName(resourceRegistrationRequest.getProviderName())
+                .setDescription(resourceRegistrationRequest.getProviderDescription())
+                .setProviderCode(resourceRegistrationRequest.getProviderCode())
+                .setSampleId(resourceRegistrationRequest.getSampleId())
+                .setResourceHomeUrl(resourceRegistrationRequest.getProviderHomeUrl());
         return resource;
     }
 }

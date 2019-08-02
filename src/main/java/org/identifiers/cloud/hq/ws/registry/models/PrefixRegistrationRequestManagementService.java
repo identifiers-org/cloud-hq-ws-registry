@@ -10,10 +10,10 @@ import org.identifiers.cloud.hq.ws.registry.data.models.*;
  * @author Manuel Bernal Llinares <mbdebian@gmail.com>
  * ---
  *
- * Attending a prefix registration request involves registering the request itself, making possible ammendments to it,
+ * Attending a prefix registration request involves registering the request itself, making possible amendments to it,
  * possibly associating comments to the request, and closing the request by either accepting it or rejecting it.
  *
- * A prefix registration request management service implements this operations to support this workflow, and it follows
+ * A prefix registration request management service implements these operations to support this workflow, and it follows
  * a strategy pattern.
  *
  */
@@ -38,7 +38,7 @@ public interface PrefixRegistrationRequestManagementService {
      *
      * @param prefixRegistrationSession opened prefix registration session where the request is being amended
      * @param amendedRequest amended prefix registration request, which is a copy of the latest version of the prefix
-     *                       registration requests, with some changes applied to it.
+     *                       registration request, with some changes applied to it.
      * @param actor the actor that has triggered this action
      * @param additionalInformation possible additional information related to this action
      * @return the prefix registration event registered as a consequence of executing this action
@@ -53,6 +53,7 @@ public interface PrefixRegistrationRequestManagementService {
      * Log a comment on the given prefix registration session.
      *
      * @param prefixRegistrationSession opened prefix registration session where this action is being triggered
+     * @param comment the comment to be logged for this resource registration session
      * @param actor the actor that has triggered this action
      * @param additionalInformation possible additional information related to this action
      * @return the prefix registration event registered as a consequence of executing this action
@@ -67,6 +68,7 @@ public interface PrefixRegistrationRequestManagementService {
      * Close a prefix registration session, by rejecting its prefix registration request.
      *
      * @param prefixRegistrationSession opened prefix registration session where this action is being triggered
+     * @param rejectionReason the reason why the prefix registration request was rejected
      * @param actor the actor that has triggered this action
      * @param additionalInformation possible additional information related to this action
      * @return the prefix registration event registered as a consequence of executing this action
@@ -81,6 +83,7 @@ public interface PrefixRegistrationRequestManagementService {
      * Close a prefix registration session, by accepting its prefix registration request.
      *
      * @param prefixRegistrationSession opened prefix registration session where this action is being triggered
+     * @param acceptanceReason the reason why the prefix registration request was accepted
      * @param actor the actor that has triggered this action
      * @param additionalInformation possible additional information related to this action
      * @return the prefix registration event registered as a consequence of executing this action

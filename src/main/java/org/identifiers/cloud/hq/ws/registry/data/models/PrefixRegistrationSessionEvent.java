@@ -33,7 +33,6 @@ import java.util.Date;
 @Table(indexes = {@Index(name = "idx_actor", columnList = "actor"),
                     @Index(name = "idx_event_name", columnList = "eventName")})
 public class PrefixRegistrationSessionEvent {
-    // TODO
     @Id
     @GeneratedValue
     private long id;

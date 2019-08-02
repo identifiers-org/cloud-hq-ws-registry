@@ -1,10 +1,10 @@
 package org.identifiers.cloud.hq.ws.registry.api.models;
 
 import org.identifiers.cloud.hq.ws.registry.api.ApiCentral;
-import org.identifiers.cloud.hq.ws.registry.api.requests.ServiceRequestValidate;
+import org.identifiers.cloud.hq.ws.registry.api.requests.ServiceRequestRegisterPrefixValidate;
 import org.identifiers.cloud.hq.ws.registry.api.responses.ServiceResponse;
 import org.identifiers.cloud.hq.ws.registry.api.responses.ServiceResponseRegisterPrefixPayload;
-import org.identifiers.cloud.hq.ws.registry.api.responses.ServiceResponseValidateRequest;
+import org.identifiers.cloud.hq.ws.registry.api.responses.ServiceResponseRegisterPrefixValidateRequest;
 import org.identifiers.cloud.hq.ws.registry.models.validators.PrefixRegistrationRequestValidator;
 import org.identifiers.cloud.hq.ws.registry.models.validators.PrefixRegistrationRequestValidatorException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -116,10 +116,10 @@ public class PrefixRegistrationRequestValidationApiModel {
         response.setPayload(payload);
     }
 
-    private ServiceResponseValidateRequest doValidation(ServiceRequestValidate request,
-                                                        PrefixRegistrationRequestValidator validator) {
+    private ServiceResponseRegisterPrefixValidateRequest doValidation(ServiceRequestRegisterPrefixValidate request,
+                                                                      PrefixRegistrationRequestValidator validator) {
         // TODO - Check API version information?
-        ServiceResponseValidateRequest response = new ServiceResponseValidateRequest();
+        ServiceResponseRegisterPrefixValidateRequest response = new ServiceResponseRegisterPrefixValidateRequest();
         initDefaultResponse(response, new ServiceResponseRegisterPrefixPayload());
         // Validate the request
         boolean isValidRequest = false;
@@ -137,83 +137,83 @@ public class PrefixRegistrationRequestValidationApiModel {
     }
 
     // -- API --
-    public ServiceResponseValidateRequest validateName(ServiceRequestValidate request) {
+    public ServiceResponseRegisterPrefixValidateRequest validateName(ServiceRequestRegisterPrefixValidate request) {
         return doValidation(request, nameValidator);
     }
 
-    public ServiceResponseValidateRequest validateDescription(ServiceRequestValidate request) {
+    public ServiceResponseRegisterPrefixValidateRequest validateDescription(ServiceRequestRegisterPrefixValidate request) {
         return doValidation(request, descriptionValidator);
     }
 
-    public ServiceResponseValidateRequest validateProviderHomeUrl(ServiceRequestValidate request) {
+    public ServiceResponseRegisterPrefixValidateRequest validateProviderHomeUrl(ServiceRequestRegisterPrefixValidate request) {
         return doValidation(request, providerHomeUrlValidator);
     }
 
-    public ServiceResponseValidateRequest validateProviderName(ServiceRequestValidate request) {
+    public ServiceResponseRegisterPrefixValidateRequest validateProviderName(ServiceRequestRegisterPrefixValidate request) {
         return doValidation(request, providerNameValidator);
     }
 
-    public ServiceResponseValidateRequest validateProviderDescription(ServiceRequestValidate request) {
+    public ServiceResponseRegisterPrefixValidateRequest validateProviderDescription(ServiceRequestRegisterPrefixValidate request) {
         return doValidation(request, providerDescriptionValidator);
     }
 
-    public ServiceResponseValidateRequest validateProviderLocation(ServiceRequestValidate request) {
+    public ServiceResponseRegisterPrefixValidateRequest validateProviderLocation(ServiceRequestRegisterPrefixValidate request) {
         return doValidation(request, providerLocationValidator);
     }
 
-    public ServiceResponseValidateRequest validateProviderCode(ServiceRequestValidate request) {
+    public ServiceResponseRegisterPrefixValidateRequest validateProviderCode(ServiceRequestRegisterPrefixValidate request) {
         return doValidation(request, providerCodeValidator);
     }
 
-    public ServiceResponseValidateRequest validateInstitutionName(ServiceRequestValidate request) {
+    public ServiceResponseRegisterPrefixValidateRequest validateInstitutionName(ServiceRequestRegisterPrefixValidate request) {
         return doValidation(request, institutionNameValidator);
     }
 
-    public ServiceResponseValidateRequest validateInstitutionDescription(ServiceRequestValidate request) {
+    public ServiceResponseRegisterPrefixValidateRequest validateInstitutionDescription(ServiceRequestRegisterPrefixValidate request) {
         return doValidation(request, institutionDescriptionValidator);
     }
 
-    public ServiceResponseValidateRequest validateInstitutionLocation(ServiceRequestValidate request) {
+    public ServiceResponseRegisterPrefixValidateRequest validateInstitutionLocation(ServiceRequestRegisterPrefixValidate request) {
         return doValidation(request, institutionLocationValidator);
     }
 
-    public ServiceResponseValidateRequest validateRequestedPrefix(ServiceRequestValidate request) {
+    public ServiceResponseRegisterPrefixValidateRequest validateRequestedPrefix(ServiceRequestRegisterPrefixValidate request) {
         return doValidation(request, prefixValidator);
     }
 
-    public ServiceResponseValidateRequest validateProviderUrlPattern(ServiceRequestValidate request) {
+    public ServiceResponseRegisterPrefixValidateRequest validateProviderUrlPattern(ServiceRequestRegisterPrefixValidate request) {
         return doValidation(request, providerUrlPatternValidator);
     }
 
-    public ServiceResponseValidateRequest validateSampleId(ServiceRequestValidate request) {
+    public ServiceResponseRegisterPrefixValidateRequest validateSampleId(ServiceRequestRegisterPrefixValidate request) {
         return doValidation(request, crossedSampleIdProviderUrlPatternValidator);
     }
 
-    public ServiceResponseValidateRequest validateIdRegexPattern(ServiceRequestValidate request) {
+    public ServiceResponseRegisterPrefixValidateRequest validateIdRegexPattern(ServiceRequestRegisterPrefixValidate request) {
         return doValidation(request, crossedIdRegexPatternAndSampleIdValidator);
     }
 
-    public ServiceResponseValidateRequest validateReferences(ServiceRequestValidate request) {
+    public ServiceResponseRegisterPrefixValidateRequest validateReferences(ServiceRequestRegisterPrefixValidate request) {
         return doValidation(request, referencesValidator);
     }
 
-    public ServiceResponseValidateRequest validateAdditionalInformation(ServiceRequestValidate request) {
+    public ServiceResponseRegisterPrefixValidateRequest validateAdditionalInformation(ServiceRequestRegisterPrefixValidate request) {
         return doValidation(request, additionalInformationValidator);
     }
 
-    public ServiceResponseValidateRequest validateRequester(ServiceRequestValidate request) {
+    public ServiceResponseRegisterPrefixValidateRequest validateRequester(ServiceRequestRegisterPrefixValidate request) {
         return doValidation(request, requesterValidator);
     }
 
-    public ServiceResponseValidateRequest validateInstitutionHomeUrl(ServiceRequestValidate request) {
+    public ServiceResponseRegisterPrefixValidateRequest validateInstitutionHomeUrl(ServiceRequestRegisterPrefixValidate request) {
         return doValidation(request, institutionHomeUrlValidator);
     }
 
-    public ServiceResponseValidateRequest validateRequesterName(ServiceRequestValidate request) {
+    public ServiceResponseRegisterPrefixValidateRequest validateRequesterName(ServiceRequestRegisterPrefixValidate request) {
         return doValidation(request, requesterNameValidator);
     }
 
-    public ServiceResponseValidateRequest validateRequesterEmail(ServiceRequestValidate request) {
+    public ServiceResponseRegisterPrefixValidateRequest validateRequesterEmail(ServiceRequestRegisterPrefixValidate request) {
         return doValidation(request, requesterEmailValidator);
     }
 }

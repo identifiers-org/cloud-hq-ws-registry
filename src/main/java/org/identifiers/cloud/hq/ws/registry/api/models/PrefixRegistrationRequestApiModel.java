@@ -78,14 +78,14 @@ public class PrefixRegistrationRequestApiModel {
         if (request.getPayload().getRejectionReason() != null) {
             return request.getPayload().getRejectionReason();
         }
-        return "No rejection reason provided provided";
+        return "No rejection reason provided";
     }
 
     private String getAcceptanceReasonFrom(ServiceRequestRegisterPrefixSessionEvent request) {
         if (request.getPayload().getAcceptanceReason() != null) {
             return request.getPayload().getAcceptanceReason();
         }
-        return "No acceptance reason provided provided";
+        return "No acceptance reason provided";
     }
 
     private PrefixRegistrationSession getPrefixRegistrationSession(String eventName, long sessionId, ServiceRequestRegisterPrefixSessionEvent request, ServiceResponseRegisterPrefixSessionEvent response) {

@@ -48,4 +48,8 @@ public class Namespace implements Serializable {
     private String sampleId;
     // Whether this namespace has LUIs with embedded namespace prefix
     private boolean namespaceEmbeddedInLui;
+    // This field flags whether the namespace has been deprecated or not
+    private boolean deprecated;
+    // Information on when this namespace was deprecated
+    private Date deprecationDate;
 }

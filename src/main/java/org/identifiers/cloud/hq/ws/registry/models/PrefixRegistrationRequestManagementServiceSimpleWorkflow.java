@@ -111,7 +111,7 @@ public class PrefixRegistrationRequestManagementServiceSimpleWorkflow implements
                     .setPrefixRegistrationRequest(savedRequest);
             eventAmend = prefixRegistrationSessionEventAmendRepository.save(eventAmend);
             // Update the prefix registration request referenced at session level
-            prefixRegistrationSession.setPrefixRegistrationRequest(amendedRequest);
+            prefixRegistrationSession.setPrefixRegistrationRequest(savedRequest);
             prefixRegistrationSessionRepository.save(prefixRegistrationSession);
             // Return the event
             return eventAmend;
@@ -132,7 +132,6 @@ public class PrefixRegistrationRequestManagementServiceSimpleWorkflow implements
             throw new PrefixRegistrationRequestManagementServiceException("NO comment requests ACCEPTED on ALREADY CLOSED Prefix Registration Session");
         }
         try {
-            // TODO
             // Create the event
             PrefixRegistrationSessionEventComment eventComment =
                     new PrefixRegistrationSessionEventComment().setComment(comment);
@@ -213,7 +212,7 @@ public class PrefixRegistrationRequestManagementServiceSimpleWorkflow implements
             prefixRegistrationSession.setClosed(true);
             // Session is considered 'closed' right now
             // Activate the new Namespace with its first provider
-            Resource resource = DataModelConversionHelper.getFrom(prefixRegistrationSession.getPrefixRegistrationRequest());
+            Resource resource = DataModelConversionHelper.getResourceFrom(prefixRegistrationSession.getPrefixRegistrationRequest());
             try {
                 resourceService.registerResource(resource);
             } catch (RuntimeException e) {

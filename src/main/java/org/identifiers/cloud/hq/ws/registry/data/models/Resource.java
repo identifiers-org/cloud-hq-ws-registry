@@ -37,7 +37,8 @@ public class Resource {
     @GeneratedValue
     private long id;
 
-    @Column(nullable = false, unique = true)
+    // TODO updates to this field should not be allowed via the REST repository (https://github.com/identifiers-org/cloud-hq-ws-registry/issues/45)
+    @Column(nullable = false, unique = true, updatable = false)
     private String mirId;
 
     // URL with the '{$id}' placeholder
@@ -73,6 +74,15 @@ public class Resource {
     @LastModifiedDate
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Date modified;
+
+    // This field flags whether the resource has been deprecated or not
+    @Column(nullable = false)
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    private boolean deprecated = false;
+
+    // Information on when this resource was deprecated
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    private Date deprecationDate;
 
     @ManyToOne(optional = false)
     private Institution institution;
