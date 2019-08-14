@@ -4,6 +4,7 @@ import org.identifiers.cloud.hq.ws.registry.data.models.*;
 import org.identifiers.cloud.hq.ws.registry.data.repositories.*;
 import org.identifiers.cloud.hq.ws.registry.data.services.ResourceService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import javax.transaction.Transactional;
@@ -42,9 +43,14 @@ public class PrefixRegistrationRequestManagementServiceSimpleWorkflow implements
 
     // Prefix registration session completion actions
     @Autowired
-    private PrefixRegistrationSessionActionAcceptance actionAcceptance;
+    @Qualifier("PrefixRegistrationSessionActionStart")
+    private PrefixRegistrationSessionAction actionStart;
     @Autowired
-    private PrefixRegistrationSessionActionRejection actionRejection;
+    @Qualifier("PrefixRegistrationSessionActionAcceptance")
+    private PrefixRegistrationSessionAction actionAcceptance;
+    @Autowired
+    @Qualifier("PrefixRegistrationSessionActionRejection")
+    private PrefixRegistrationSessionAction actionRejection;
     // END - Prefix registration session completion actions
 
     // Helpers
@@ -80,6 +86,8 @@ public class PrefixRegistrationRequestManagementServiceSimpleWorkflow implements
                     .setAdditionalInformation(additionalInformation)
                     .setPrefixRegistrationRequest(savedRequest)
                     .setPrefixRegistrationSession(session);
+            // Take Action
+            actionStart.performAction(session);
             // Return the event
             return prefixRegistrationSessionEventStartRepository.save(sessionEventStart);
         } catch (RuntimeException e) {

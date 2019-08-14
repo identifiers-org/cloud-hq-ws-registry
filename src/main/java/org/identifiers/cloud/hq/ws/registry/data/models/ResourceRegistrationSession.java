@@ -30,7 +30,7 @@ import java.util.Date;
 @Accessors(chain = true)
 @Entity
 @EntityListeners(AuditingEntityListener.class)
-@Table(indexes = {@Index(name = "idx_closed", columnList = "closed")})
+@Table(indexes = {@Index(name = "idx_resource_registration_session_closed", columnList = "closed")})
 public class ResourceRegistrationSession {
     @Id
     @GeneratedValue

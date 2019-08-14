@@ -4,6 +4,7 @@ import org.identifiers.cloud.hq.ws.registry.data.models.*;
 import org.identifiers.cloud.hq.ws.registry.data.repositories.*;
 import org.identifiers.cloud.hq.ws.registry.data.services.ResourceService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import javax.transaction.Transactional;
@@ -42,9 +43,14 @@ public class ResourceRegistrationRequestManagementServiceSimpleWorkflow implemen
 
     // TODO - Resource registration session completion actions
     @Autowired
-    private ResourceRegistrationSessionActionRejection actionRejection;
+    @Qualifier("ResourceRegistrationSessionActionRejection")
+    private ResourceRegistrationSessionAction actionRejection;
     @Autowired
-    private ResourceRegistrationSessionActionAcceptance actionAcceptance;
+    @Qualifier("ResourceRegistrationSessionActionAcceptance")
+    private ResourceRegistrationSessionAction actionAcceptance;
+    @Autowired
+    @Qualifier("ResourceRegistrationSessionActionStart")
+    private ResourceRegistrationSessionAction actionStart;
 
     // Helpers
     private boolean isResourceRegistrationSessionOpen(ResourceRegistrationSession session) {
@@ -80,6 +86,8 @@ public class ResourceRegistrationRequestManagementServiceSimpleWorkflow implemen
                     .setAdditionalInformation(additionalInformation)
                     .setResourceRegistrationRequest(savedRequest)
                     .setResourceRegistrationSession(session);
+            // Take action
+            actionStart.performAction(session);
             // Return the event
             return resourceRegistrationSessionEventStartRepository.save(sessionEventStart);
         } catch (RuntimeException e) {
@@ -223,7 +231,7 @@ public class ResourceRegistrationRequestManagementServiceSimpleWorkflow implemen
             return eventAccept;
         } catch (RuntimeException e) {
             throw new ResourceRegistrationRequestManagementServiceException(
-                    String.format("While accepting a resource registration request, with reason '%s', for provider name '%s', " +
+                    String.format("While accepting a resource registration request, with acceptance reason '%s', for provider name '%s', " +
                                     "the following error occurred: '%s'",
                             acceptanceReason,
                             resourceRegistrationSession.getResourceRegistrationRequest().getProviderName(),

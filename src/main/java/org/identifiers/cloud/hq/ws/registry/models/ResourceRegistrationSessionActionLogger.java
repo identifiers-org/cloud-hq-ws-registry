@@ -43,10 +43,10 @@ public class ResourceRegistrationSessionActionLogger implements ResourceRegistra
             report.setAdditionalInformation(message);
             log.info(message);
         } else {
-            message = String.format("%s HAS NOT BEEN CLOSED!!!", logMessagePrefix);
+            message = String.format("%s IS OPEN", logMessagePrefix);
             report.setErrorMessage(message);
             report.setSuccess(false);
-            log.error(message);
+            log.info(message);
         }
         return report;
     }
