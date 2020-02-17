@@ -173,4 +173,7 @@ public class ResourceManagementApiController {
         ServiceResponseReactivateResource response = model.reactivateResource(resourceId, request);
         return new ResponseEntity<>(response, response.getHttpStatus());
     }
+
+
+    // --- Resource Update Request API ---
 }
