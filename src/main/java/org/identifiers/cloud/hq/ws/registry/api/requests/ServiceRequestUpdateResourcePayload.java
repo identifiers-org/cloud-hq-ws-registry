@@ -1,5 +1,11 @@
 package org.identifiers.cloud.hq.ws.registry.api.requests;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.experimental.Accessors;
+
 /**
  * Project: cloud-hq-ws-registry
  * Package: org.identifiers.cloud.hq.ws.registry.api.requests
@@ -10,6 +16,11 @@ package org.identifiers.cloud.hq.ws.registry.api.requests;
  *
  * Data model for requests on updating resources
  */
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Accessors(chain = true)
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class ServiceRequestUpdateResourcePayload {
     // TODO
 }
