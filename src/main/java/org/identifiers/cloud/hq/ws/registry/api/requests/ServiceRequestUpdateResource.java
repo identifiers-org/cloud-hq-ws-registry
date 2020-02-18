@@ -9,5 +9,5 @@ package org.identifiers.cloud.hq.ws.registry.api.requests;
  * ---
  */
 public class ServiceRequestUpdateResource extends ServiceRequest<ServiceRequestUpdateResourcePayload> {
-    
+
 }
