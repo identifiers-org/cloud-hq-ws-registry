@@ -26,11 +26,9 @@ public class ServiceRequestUpdateResourcePayload {
     // Registry internal ID for the resource
     private long providerId;
 
+    // --- Updatable Provider details ---
     // Resource MIR ID
     private String providerMirId;
-
-    // Namespace ('prefix') in case the update is about moving the resource to another namespace
-    private String namespacePrefix;
 
     // Home URL for the resource
     private String providerHomeUrl;
@@ -50,6 +48,10 @@ public class ServiceRequestUpdateResourcePayload {
     // URL pattern for the provider being updated
     private String providerUrlPattern;
 
+    // This is a sample LUI that is covered by the resource being registered
+    private String sampleId;
+
+    // --- Associated Institution ---
     // This is the name of the institution that owns the resource that's being updated
     private String institutionName;
 
@@ -65,9 +67,11 @@ public class ServiceRequestUpdateResourcePayload {
     // ROR ID for this institution
     private String institutionRorId;
 
-    // This is a sample LUI that is covered by the resource being registered
-    private String sampleId;
-
+    // --- UPDATE REQUEST Details ---
     private String additionalInformation;
     private Requester requester;
+    // Other request action types
+    private boolean actionTogglePrimaryFlag = false;
+    private boolean actionDeprecateResource = false;
+    private boolean actionContactPersonUpdate = false;
 }
