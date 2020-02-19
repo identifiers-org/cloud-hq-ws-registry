@@ -176,4 +176,19 @@ public class ResourceManagementApiController {
 
 
     // --- Resource Update Request API ---
+    /*
+    Different updates that can be requested around providers:
+        - MIR ID update
+        - update on the resource details, e.g. name, description, URL pattern, sample ID, home URL, location... etc.
+        - Primary flag toggle
+        - Deprecation / Re-activation request
+        - Associated Institution update
+            - In this case, it is not about updating the details of the currently associated institution, but about reassigning the provider
+            to another institution, either a new one for the registry, or another institution that already exists in the registry.
+        - Namespace change
+            - It doesn't make sense to request for a provider to be moved to another namespace, in this case, two different requests should be submitted:
+                1. Deprecation of the provider in its current namespace
+                2. Resource registration request on the new namespace
+        - Contact person update. In this case, it would make sense that the very requester is the one being set as the new contact person for the provider
+     */
 }
