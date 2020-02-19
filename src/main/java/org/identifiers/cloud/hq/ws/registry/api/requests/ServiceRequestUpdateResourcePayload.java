@@ -23,6 +23,12 @@ import org.identifiers.cloud.hq.ws.registry.api.data.models.Requester;
 @Accessors(chain = true)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ServiceRequestUpdateResourcePayload {
+    // Registry internal ID for the resource
+    private long resourceId;
+
+    // Resource MIR ID
+    private String resourceMirId;
+    
     // Namespace ('prefix') in case the update is about moving the resource to another namespace
     private String namespacePrefix;
 
