@@ -7,10 +7,7 @@ import lombok.experimental.Accessors;
 import org.identifiers.cloud.hq.ws.registry.api.data.models.Requester;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import javax.persistence.Entity;
-import javax.persistence.EntityListeners;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 /**
  * Project: cloud-hq-ws-registry
@@ -34,7 +31,8 @@ public class ResourceUpdateRequest {
     private long id;
 
     // Registry internal ID for the resource
-    private long providerId;
+    @ManyToOne(optional = false)
+    private Resource resource;
 
     // --- Updatable Provider details ---
     // Resource MIR ID
