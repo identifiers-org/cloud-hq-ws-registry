@@ -8,6 +8,8 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 
 /**
  * Project: cloud-hq-ws-registry
@@ -26,5 +28,7 @@ import javax.persistence.EntityListeners;
 @Entity
 @EntityListeners(AuditingEntityListener.class)
 public class ResourceUpdateRequest {
-
+    @Id
+    @GeneratedValue
+    private long id;
 }
