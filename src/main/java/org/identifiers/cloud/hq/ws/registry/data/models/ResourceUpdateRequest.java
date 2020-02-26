@@ -46,6 +46,7 @@ public class ResourceUpdateRequest {
     private String providerName;
 
     // Description for the provider being updated, optional, as it may not be part of the update request
+    @Column(length = 2000)
     private String providerDescription;
 
     // Location Associated with the provider being updated
