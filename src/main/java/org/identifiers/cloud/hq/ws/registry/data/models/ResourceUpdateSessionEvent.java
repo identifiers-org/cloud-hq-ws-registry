@@ -18,7 +18,7 @@ import java.util.Date;
  *
  * @author Manuel Bernal Llinares <mbdebian@gmail.com>
  * ---
- *
+ * <p>
  * Root of the data model tree that represents the events that are part of a resource update request session.
  */
 @Data
@@ -28,6 +28,8 @@ import java.util.Date;
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
 @EntityListeners(AuditingEntityListener.class)
+@Table(indexes = {@Index(name = "idx_resource_update_session_event_actor", columnList = "actor"),
+        @Index(name = "idx_resource_update_session_event_name", columnList = "eventName")})
 public class ResourceUpdateSessionEvent {
 
     @Id
