@@ -7,6 +7,8 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 import org.identifiers.cloud.hq.ws.registry.api.data.models.Requester;
 
+import java.io.Serializable;
+
 /**
  * Project: cloud-hq-ws-registry
  * Package: org.identifiers.cloud.hq.ws.registry.api.requests
@@ -22,7 +24,7 @@ import org.identifiers.cloud.hq.ws.registry.api.data.models.Requester;
 @NoArgsConstructor
 @Accessors(chain = true)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class ServiceRequestUpdateResourcePayload {
+public class ServiceRequestUpdateResourcePayload implements Serializable {
     // Registry internal ID for the resource
     private long providerId;
 
