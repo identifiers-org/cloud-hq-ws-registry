@@ -35,16 +35,17 @@ public class ResourceUpdateRequest {
     private Resource resource;
 
     // --- Updatable Provider details ---
-    // Resource MIR ID
+    // Resource MIR ID, optional, as it may not be part of the update request
     private String providerMirId;
 
-    // Home URL for the resource
+    // Home URL for the resource, optional, as it may not be part of the update request
+    @Column(length = 2000)
     private String providerHomeUrl;
 
-    // Name update for the provider
+    // Name update for the provider, optional, as it may not be part of the update request
     private String providerName;
 
-    // Description for the provider being updated
+    // Description for the provider being updated, optional, as it may not be part of the update request
     private String providerDescription;
 
     // Location Associated with the provider being updated
