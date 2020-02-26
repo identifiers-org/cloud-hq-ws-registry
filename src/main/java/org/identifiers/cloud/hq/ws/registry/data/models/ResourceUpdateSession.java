@@ -28,6 +28,7 @@ import java.util.Date;
 @Accessors(chain = true)
 @Entity
 @EntityListeners(AuditingEntityListener.class)
+@Table(indexes = {@Index(name = "idx_resource_update_session_closed", columnList = "closed")})
 public class ResourceUpdateSession {
     @Id
     @GeneratedValue
