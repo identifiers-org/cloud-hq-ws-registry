@@ -40,8 +40,10 @@ import java.util.Optional;
 @Slf4j
 @Component
 public class ResourceManagementApiModel {
+    // TODO - Refactor validation APIs out, into delegates that are composed here
 
     // --- Validators ---
+    // --- For Resource Registration Requests
     @Autowired
     @Qualifier("ResourceRegistrationRequestValidatorNamespacePrefix")
     private ResourceRegistrationRequestValidator namespacePrefixValidator;
@@ -105,6 +107,9 @@ public class ResourceManagementApiModel {
     @Autowired
     @Qualifier("ResourceRegistrationRequestValidatorRequesterEmail")
     private ResourceRegistrationRequestValidator requesterEmailValidator;
+
+    // TODO --- For Resource Update Requests
+    // --- END --- Validators ---
 
     // Resource Registration Request validation strategy
     @Autowired
@@ -224,8 +229,8 @@ public class ResourceManagementApiModel {
         return response;
     }
 
-    // --- API ---
-    // Resource Registration API
+    // [--- --- --- API --- --- ---]
+    // --- Resource Registration API
     public ServiceResponseRegisterResource registerResource(ServiceRequestRegisterResource request) {
         // Create default response
         ServiceResponseRegisterResource response = createRegisterResourceDefaultResponse();
@@ -315,7 +320,8 @@ public class ResourceManagementApiModel {
         return response;
     }
 
-    // Validation API
+    // --- Validation API
+    // For Resource Registration Requests
     public ServiceResponseRegisterResourceValidate validateProviderHomeUrl(ServiceRequestRegisterResourceValidate request) {
         return doValidation(request, providerHomeUrlValidator);
     }
@@ -379,6 +385,9 @@ public class ResourceManagementApiModel {
     public ServiceResponseRegisterResourceValidate validateNamespacePrefix(ServiceRequestRegisterResourceValidate request) {
         return doValidation(request, namespacePrefixValidator);
     }
+
+    // TODO For Resource Update Requests
+    // --- END --- Validation API
 
     // TODO --- Resource Lifecycle Management API
     // Helper
