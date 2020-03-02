@@ -150,7 +150,22 @@ public class ApiAndDataModelsHelper {
 
     // Get a Prefix Registration Request Payload from a Resource Update Request Payload
     public static ServiceRequestRegisterPrefixPayload getFrom(ServiceRequestUpdateResourcePayload payload) {
-        // TODO
+        // Requested prefix and other namespace specific attributes are not being used, as this is working on a resource
+        // update request
         return new ServiceRequestRegisterPrefixPayload()
+                .setAdditionalInformation(payload.getAdditionalInformation())
+                .setRequester(payload.getRequester())
+                .setSampleId(payload.getSampleId())
+                .setInstitutionDescription(payload.getInstitutionDescription())
+                .setInstitutionHomeUrl(payload.getInstitutionHomeUrl())
+                .setInstitutionLocation(payload.getInstitutionLocation())
+                .setInstitutionName(payload.getInstitutionName())
+                .setInstitutionRorId(payload.getInstitutionRorId())
+                .setProviderCode(payload.getProviderCode())
+                .setProviderDescription(payload.getProviderDescription())
+                .setProviderHomeUrl(payload.getProviderHomeUrl())
+                .setProviderLocation(payload.getProviderLocation())
+                .setProviderName(payload.getProviderName())
+                .setProviderUrlPattern(payload.getProviderUrlPattern());
     }
 }
