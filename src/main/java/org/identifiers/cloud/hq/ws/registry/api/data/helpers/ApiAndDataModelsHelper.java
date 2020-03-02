@@ -6,6 +6,7 @@ import org.identifiers.cloud.hq.ws.registry.api.data.models.Namespace;
 import org.identifiers.cloud.hq.ws.registry.api.data.models.Resource;
 import org.identifiers.cloud.hq.ws.registry.api.requests.ServiceRequestRegisterPrefixPayload;
 import org.identifiers.cloud.hq.ws.registry.api.requests.ServiceRequestRegisterResourcePayload;
+import org.identifiers.cloud.hq.ws.registry.api.requests.ServiceRequestUpdateResourcePayload;
 import org.identifiers.cloud.hq.ws.registry.data.models.PrefixRegistrationRequest;
 import org.identifiers.cloud.hq.ws.registry.data.models.ResourceRegistrationRequest;
 
@@ -145,5 +146,11 @@ public class ApiAndDataModelsHelper {
                 .setProviderName(payload.getProviderName())
                 .setProviderUrlPattern(payload.getProviderUrlPattern())
                 .setRequestedPrefix(payload.getNamespacePrefix());
+    }
+
+    // Get a Prefix Registration Request Payload from a Resource Update Request Payload
+    public static ServiceRequestRegisterPrefixPayload getFrom(ServiceRequestUpdateResourcePayload payload) {
+        // TODO
+        return new ServiceRequestRegisterPrefixPayload()
     }
 }
