@@ -4,6 +4,7 @@ import org.identifiers.cloud.hq.ws.registry.api.data.helpers.ApiAndDataModelsHel
 import org.identifiers.cloud.hq.ws.registry.api.requests.ServiceRequestUpdateResourcePayload;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Component;
 
 /**
  * Project: cloud-hq-ws-registry
@@ -13,6 +14,8 @@ import org.springframework.beans.factory.annotation.Qualifier;
  * @author Manuel Bernal Llinares <mbdebian@gmail.com>
  * ---
  */
+@Component
+@Qualifier("ResourceUpdateRequestValidatorInstitutionDescription")
 public class ResourceUpdateRequestValidatorInstitutionDescription implements ResourceUpdateRequestValidator {
     // TODO
 
