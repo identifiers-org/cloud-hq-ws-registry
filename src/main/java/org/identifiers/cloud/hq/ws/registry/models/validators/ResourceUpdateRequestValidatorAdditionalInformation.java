@@ -31,7 +31,7 @@ public class ResourceUpdateRequestValidatorAdditionalInformation implements Reso
             return (request.getAdditionalInformation() == null)
                     || (delegateValidator.validate(ApiAndDataModelsHelper.getFrom(request)));
         } catch (PrefixRegistrationRequestValidatorException e) {
-            throw new ResourceUpdateRequestValidatorException(String.format("Invalid additional information: '%s'",e.getMessage()));
+            throw new ResourceUpdateRequestValidatorException(String.format("Invalid additional information: '%s', '%s'",request.getAdditionalInformation(), e.getMessage()));
         }
     }
 }
