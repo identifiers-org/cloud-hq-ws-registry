@@ -27,7 +27,11 @@ public class ResourceUpdateRequestValidatorAdditionalInformation implements Reso
 
     @Override
     public boolean validate(ServiceRequestUpdateResourcePayload request) throws ResourceUpdateRequestValidatorException {
-        return (request.getAdditionalInformation() == null)
-                || (delegateValidator.validate(ApiAndDataModelsHelper.getFrom(request)));
+        try {
+            return (request.getAdditionalInformation() == null)
+                    || (delegateValidator.validate(ApiAndDataModelsHelper.getFrom(request)));
+        } catch (PrefixRegistrationRequestValidatorException e) {
+            throw new ResourceUpdateRequestValidatorException(String.format("Invalid additional information: '%s'",e.getMessage()));
+        }
     }
 }
