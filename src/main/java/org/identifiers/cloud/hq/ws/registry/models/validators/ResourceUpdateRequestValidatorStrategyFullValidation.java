@@ -1,5 +1,7 @@
 package org.identifiers.cloud.hq.ws.registry.models.validators;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
@@ -16,30 +18,81 @@ import java.util.List;
 @Component
 public class ResourceUpdateRequestValidatorStrategyFullValidation implements ResourceUpdateRequestValidatorStrategy {
     // Wire in the validators
-    private ResourceUpdateRequestValidator validatorProviderId;
+    @Autowired
+    @Qualifier("ResourceUpdateRequestValidatorProviderMirId")
     private ResourceUpdateRequestValidator validatorProviderMirId;
+
+    @Autowired
+    @Qualifier("ResourceUpdateRequestValidatorProviderHomeUrl")
     private ResourceUpdateRequestValidator validatorProviderHomeUrl;
+
+    @Autowired
+    @Qualifier("ResourceUpdateRequestValidatorProviderName")
     private ResourceUpdateRequestValidator validatorProviderName;
+
+    @Autowired
+    @Qualifier("ResourceUpdateRequestValidatorProviderDescription")
     private ResourceUpdateRequestValidator validatorProviderDescription;
+
+    @Autowired
+    @Qualifier("ResourceUpdateRequestValidatorProviderLocation")
     private ResourceUpdateRequestValidator validatorProviderLocation;
+
+    @Autowired
+    @Qualifier("ResourceUpdateRequestValidatorProviderCode")
     private ResourceUpdateRequestValidator validatorProviderCode;
+
+    @Autowired
+    @Qualifier("ResourceUpdateRequestValidatorProviderUrlPattern")
     private ResourceUpdateRequestValidator validatorProviderUrlPattern;
+
+    @Autowired
+    @Qualifier("ResourceUpdateRequestValidatorSampleId")
     private ResourceUpdateRequestValidator validatorSampleId;
+
+    @Autowired
+    @Qualifier("ResourceUpdateRequestValidatorInstitutionName")
     private ResourceUpdateRequestValidator validatorInstitutionName;
+
+    @Autowired
+    @Qualifier("ResourceUpdateRequestValidatorInstitutionHomeUrl")
     private ResourceUpdateRequestValidator validatorInstitutionHomeUrl;
+
+    @Autowired
+    @Qualifier("ResourceUpdateRequestValidatorInstitutionDescription")
     private ResourceUpdateRequestValidator validatorInstitutionDescription;
+
+    @Autowired
+    @Qualifier("ResourceUpdateRequestValidatorInstitutionLocation")
     private ResourceUpdateRequestValidator validatorInstitutionLocation;
+
+    @Autowired
+    @Qualifier("ResourceUpdateRequestValidatorInstitutionRorId")
     private ResourceUpdateRequestValidator validatorInstitutionRorId;
+
+    @Autowired
+    @Qualifier("ResourceUpdateRequestValidatorAdditionalInformation")
     private ResourceUpdateRequestValidator validatorAdditionalInformation;
+
+    @Autowired
+    @Qualifier("ResourceUpdateRequestValidatorRequester")
     private ResourceUpdateRequestValidator validatorRequester;
-    private ResourceUpdateRequestValidator validatorActionTogllePrimaryFlag;
+
+    @Autowired
+    @Qualifier("ResourceUpdateRequestValidatorActionTogglePrimaryFlag")
+    private ResourceUpdateRequestValidator validatorActionTogglePrimaryFlag;
+
+    @Autowired
+    @Qualifier("ResourceUpdateRequestValidatorActionDeprecateResource")
     private ResourceUpdateRequestValidator validatorActionDeprecateResource;
+
+    @Autowired
+    @Qualifier("ResourceUpdateRequestValidatorActionContactPersonUpdate")
     private ResourceUpdateRequestValidator validatorContactPersonUpdate;
 
     @Override
     public List<ResourceUpdateRequestValidator> getValidationChain() {
         return Arrays.asList(
-                validatorProviderId,
                 validatorProviderMirId,
                 validatorProviderHomeUrl,
                 validatorProviderName,
@@ -55,7 +108,7 @@ public class ResourceUpdateRequestValidatorStrategyFullValidation implements Res
                 validatorInstitutionRorId,
                 validatorAdditionalInformation,
                 validatorRequester,
-                validatorActionTogllePrimaryFlag,
+                validatorActionTogglePrimaryFlag,
                 validatorActionDeprecateResource,
                 validatorContactPersonUpdate
         );
