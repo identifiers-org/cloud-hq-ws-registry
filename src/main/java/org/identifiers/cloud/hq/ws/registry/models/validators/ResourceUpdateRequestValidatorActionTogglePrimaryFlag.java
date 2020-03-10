@@ -1,5 +1,9 @@
 package org.identifiers.cloud.hq.ws.registry.models.validators;
 
+import org.identifiers.cloud.hq.ws.registry.api.requests.ServiceRequestUpdateResourcePayload;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Component;
+
 /**
  * Project: cloud-hq-ws-registry
  * Package: org.identifiers.cloud.hq.ws.registry.models.validators
@@ -8,6 +12,14 @@ package org.identifiers.cloud.hq.ws.registry.models.validators;
  * @author Manuel Bernal Llinares <mbdebian@gmail.com>
  * ---
  */
+@Component
+@Qualifier("ResourceUpdateRequestValidatorActionTogglePrimaryFlag")
 public class ResourceUpdateRequestValidatorActionTogglePrimaryFlag implements ResourceUpdateRequestValidator {
     // TODO
+
+    // No further checks, whether the action was specified or not, it is optional.
+    @Override
+    public boolean validate(ServiceRequestUpdateResourcePayload request) throws ResourceUpdateRequestValidatorException {
+        return true;
+    }
 }
