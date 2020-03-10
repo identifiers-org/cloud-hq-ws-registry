@@ -1,5 +1,8 @@
 package org.identifiers.cloud.hq.ws.registry.models.validators;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Project: cloud-hq-ws-registry
  * Package: org.identifiers.cloud.hq.ws.registry.models.validators
@@ -10,4 +13,7 @@ package org.identifiers.cloud.hq.ws.registry.models.validators;
  */
 public interface ResourceUpdateRequestValidatorStrategy extends ResourceUpdateRequestValidator {
     // TODO
+    default List<ResourceUpdateRequestValidator> getValidationChain() {
+        return new ArrayList<>();
+    }
 }
