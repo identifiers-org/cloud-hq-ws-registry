@@ -2,6 +2,7 @@ package org.identifiers.cloud.hq.ws.registry.models.validators;
 
 import org.springframework.stereotype.Component;
 
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -37,6 +38,26 @@ public class ResourceUpdateRequestValidatorStrategyFullValidation implements Res
 
     @Override
     public List<ResourceUpdateRequestValidator> getValidationChain() {
-        return null;
+        return Arrays.asList(
+                validatorProviderId,
+                validatorProviderMirId,
+                validatorProviderHomeUrl,
+                validatorProviderName,
+                validatorProviderDescription,
+                validatorProviderLocation,
+                validatorProviderCode,
+                validatorProviderUrlPattern,
+                validatorSampleId,
+                validatorInstitutionName,
+                validatorInstitutionHomeUrl,
+                validatorInstitutionDescription,
+                validatorInstitutionLocation,
+                validatorInstitutionRorId,
+                validatorAdditionalInformation,
+                validatorRequester,
+                validatorActionTogllePrimaryFlag,
+                validatorActionDeprecateResource,
+                validatorContactPersonUpdate
+        );
     }
 }
