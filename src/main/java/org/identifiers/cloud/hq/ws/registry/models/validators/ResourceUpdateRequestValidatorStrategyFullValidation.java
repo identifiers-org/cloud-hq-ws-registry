@@ -14,6 +14,27 @@ import java.util.List;
  */
 @Component
 public class ResourceUpdateRequestValidatorStrategyFullValidation implements ResourceUpdateRequestValidatorStrategy {
+    // Wire in the validators
+    private ResourceUpdateRequestValidator validatorProviderId;
+    private ResourceUpdateRequestValidator validatorProviderMirId;
+    private ResourceUpdateRequestValidator validatorProviderHomeUrl;
+    private ResourceUpdateRequestValidator validatorProviderName;
+    private ResourceUpdateRequestValidator validatorProviderDescription;
+    private ResourceUpdateRequestValidator validatorProviderLocation;
+    private ResourceUpdateRequestValidator validatorProviderCode;
+    private ResourceUpdateRequestValidator validatorProviderUrlPattern;
+    private ResourceUpdateRequestValidator validatorSampleId;
+    private ResourceUpdateRequestValidator validatorInstitutionName;
+    private ResourceUpdateRequestValidator validatorInstitutionHomeUrl;
+    private ResourceUpdateRequestValidator validatorInstitutionDescription;
+    private ResourceUpdateRequestValidator validatorInstitutionLocation;
+    private ResourceUpdateRequestValidator validatorInstitutionRorId;
+    private ResourceUpdateRequestValidator validatorAdditionalInformation;
+    private ResourceUpdateRequestValidator validatorRequester;
+    private ResourceUpdateRequestValidator validatorActionTogllePrimaryFlag;
+    private ResourceUpdateRequestValidator validatorActionDeprecateResource;
+    private ResourceUpdateRequestValidator validatorContactPersonUpdate;
+
     @Override
     public List<ResourceUpdateRequestValidator> getValidationChain() {
         return null;
