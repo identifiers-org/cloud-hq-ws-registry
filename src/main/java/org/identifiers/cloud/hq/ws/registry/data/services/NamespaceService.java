@@ -104,6 +104,10 @@ public class NamespaceService {
         return namespace;
     }
 
+    public List<Namespace> getAllNamespaces() {
+        return repository.findAll();
+    }
+
     public List<String> getAllNamespacePrefixes() {
         // TODO Is this a mess or a good way to do it? Am I overusing streams?
         return repository.findAllPrefixes().stream().flatMap(Arrays::stream).map(Object::toString).collect(Collectors.toList());
