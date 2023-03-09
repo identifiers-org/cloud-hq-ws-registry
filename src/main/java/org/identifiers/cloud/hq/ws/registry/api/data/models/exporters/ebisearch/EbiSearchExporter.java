@@ -61,7 +61,7 @@ public class EbiSearchExporter implements RegistryExporter {
 
     SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
     private String format(Date date) {
-        return date != null ? df.format(date) : null;
+        return date != null ? df.format(date) : "";
     }
 
     private String genLandingPageUrl (Namespace namespace) {
