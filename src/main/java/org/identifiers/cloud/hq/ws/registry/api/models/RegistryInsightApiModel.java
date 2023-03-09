@@ -1,7 +1,6 @@
 package org.identifiers.cloud.hq.ws.registry.api.models;
 
 import org.identifiers.cloud.hq.ws.registry.api.data.models.exporters.ExportedDocument;
-import org.identifiers.cloud.hq.ws.registry.api.data.models.exporters.ebisearch.Database;
 import org.identifiers.cloud.hq.ws.registry.api.data.models.exporters.ebisearch.EbiSearchExporter;
 import org.identifiers.cloud.hq.ws.registry.data.models.Namespace;
 import org.identifiers.cloud.hq.ws.registry.data.services.NamespaceService;
@@ -10,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -32,8 +32,16 @@ public class RegistryInsightApiModel {
         return new ResponseEntity<>(namespaceService.getAllNamespacePrefixes(), HttpStatus.OK);
     }
 
-    public ExportedDocument getEbiSearchExport() {
-        List<Namespace> namespaces = namespaceService.getAllNamespaces();
-        return ebiSearchExporter.export(namespaces);
+    public ExportedDocument getEbiSearchExport(Date start) {
+        List<Namespace> namespaces;
+        if (start != null)
+            namespaces = namespaceService.findNamespacesModifiedSince(start);
+        else
+            namespaces = namespaceService.getAllNamespaces();
+
+        if (namespaces.isEmpty())
+            return null;
+        else
+            return ebiSearchExporter.export(namespaces);
     }
 }

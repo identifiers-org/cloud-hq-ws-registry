@@ -10,8 +10,10 @@ import org.identifiers.cloud.hq.ws.registry.models.schemaorg.DataCatalog;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.Collections;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -21,8 +23,6 @@ import java.util.stream.Collectors;
 public class EbiSearchExporter implements RegistryExporter {
     @Autowired
     SchemaOrgMetadataProvider schemaOrgMetadataProvider;
-
-    SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
 
     @Override
     public ExportedDocument export(List<Namespace> namespaces) throws RegistryExporterException {
@@ -59,15 +59,29 @@ public class EbiSearchExporter implements RegistryExporter {
         return newEntry;
     }
 
+    SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+    private String format(Date date) {
+        return date != null ? df.format(date) : null;
+    }
+
+    private String genLandingPageUrl (Namespace namespace) {
+        return String.format("https://identifiers.org/%s", namespace.getPrefix());
+    }
+
     private List<Field> getFieldsOfNamespace(Namespace namespace) {
         List<Field> fields = new LinkedList<>();
+
         fields.add(new Field("name", namespace.getName()));
         fields.add(new Field("description", namespace.getDescription()));
         fields.add(new Field("prefix", namespace.getPrefix()));
-        fields.add(new Field("creation_date", df.format(namespace.getCreated())));
-        fields.add(new Field("modification_date", df.format(namespace.getModified())));
-        fields.add(new Field("deprecation_date", df.format(namespace.getDeprecationDate())));
         fields.add(new Field("mir_id", namespace.getMirId()));
+
+        fields.add(new Field("creation_date", format(namespace.getCreated())));
+        fields.add(new Field("modification_date", format(namespace.getModified())));
+        fields.add(new Field("deprecation_date", format(namespace.getDeprecationDate())));
+
+        fields.add(new Field("landing_page", genLandingPageUrl(namespace)));
+
         return fields;
     }
 
