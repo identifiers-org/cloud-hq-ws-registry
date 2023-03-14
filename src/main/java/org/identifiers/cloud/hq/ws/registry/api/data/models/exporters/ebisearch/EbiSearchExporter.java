@@ -61,7 +61,10 @@ public class EbiSearchExporter implements RegistryExporter {
 
     SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
     private String format(Date date) {
-        return date != null ? df.format(date) : "";
+        return df.format(date);
+    }
+    private String format(boolean bool) {
+        return String.valueOf(bool);
     }
 
     private String genLandingPageUrl (Namespace namespace) {
@@ -78,7 +81,11 @@ public class EbiSearchExporter implements RegistryExporter {
 
         fields.add(new Field("creation_date", format(namespace.getCreated())));
         fields.add(new Field("modification_date", format(namespace.getModified())));
-        fields.add(new Field("deprecation_date", format(namespace.getDeprecationDate())));
+
+        fields.add(new Field("is_deprecated", format(namespace.isDeprecated())));
+        if (namespace.isDeprecated()) {
+            fields.add(new Field("deprecation_date", format(namespace.getDeprecationDate())));
+        }
 
         fields.add(new Field("landing_page", genLandingPageUrl(namespace)));
 
@@ -86,6 +93,13 @@ public class EbiSearchExporter implements RegistryExporter {
     }
 
     private List<Ref> getCrossRefsOfNamespace(Namespace namespace) {
-        return Collections.singletonList(new Ref(namespace.getSampleId(), namespace.getPrefix()));
+        String dbname = namespace.getPrefix().toUpperCase();
+        if (dbname.contains(".")) {
+            dbname = dbname.substring(0, dbname.indexOf('.'));
+        }
+
+        return Collections.singletonList(
+            new Ref(namespace.getSampleId(), dbname)
+        );
     }
 }
