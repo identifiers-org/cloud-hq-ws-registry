@@ -10,6 +10,8 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
+import javax.validation.constraints.AssertTrue;
+import javax.validation.constraints.Past;
 import java.util.Date;
 
 /**
@@ -81,8 +83,22 @@ public class Resource {
     private boolean deprecated = false;
 
     // Information on when this resource was deprecated
+    @Past
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Date deprecationDate;
+    @Past
+    private Date deprecationOfflineDate; // Approximation of when date was made unavailable
+
+    private boolean renderDeprecatedLanding;
+    private String deprecationStatement;
+
+    @AssertTrue(message = "Deprecation information is not allowed for not deprecated resources")
+    public boolean deprecatedValuesOnlyIfDeprecated() {
+        boolean hasAnyDeprecationValue = deprecationDate != null ||
+                                         deprecationOfflineDate != null ||
+                                         deprecationStatement != null;
+        return !deprecated || !hasAnyDeprecationValue;
+    }
 
     @ManyToOne(optional = false)
     private Institution institution;
