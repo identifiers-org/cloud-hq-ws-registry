@@ -5,7 +5,7 @@
 
     <groupId>org.identifiers.cloud.hq.ws</groupId>
     <artifactId>registry</artifactId>
-    <version>1.10.4</version>
+    <version>1.11.0</version>
     <packaging>jar</packaging>
 
     <name>registry</name>
@@ -133,6 +133,12 @@
             <artifactId>annotations</artifactId>
             <version>RELEASE</version>
             <scope>compile</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 
