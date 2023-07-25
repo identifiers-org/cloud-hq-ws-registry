@@ -97,7 +97,7 @@ public class Namespace {
         boolean hasAnyDeprecationValue = deprecationDate != null || deprecationOfflineDate != null ||
                                          deprecationStatement != null || infoOnPostmortemAccess != null ||
                                          successor != null;
-        return !deprecated || !hasAnyDeprecationValue;
+        return deprecated || !hasAnyDeprecationValue;
     }
 
 
