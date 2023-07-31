@@ -85,7 +85,7 @@ public class Namespace {
     @Past
     private Date deprecationOfflineDate; // Approximation of when date was made unavailable
 
-    private boolean renderDeprecatedLanding;
+    private boolean renderDeprecatedLanding = false;
     private String deprecationStatement;
     private String infoOnPostmortemAccess;
 

@@ -89,7 +89,8 @@ public class Resource {
     @Past
     private Date deprecationOfflineDate; // Approximation of when date was made unavailable
 
-    private boolean renderDeprecatedLanding;
+    @Column(nullable = false)
+    private boolean renderDeprecatedLanding = false;
     private String deprecationStatement;
 
     @AssertTrue(message = "Deprecation information is not allowed for not deprecated resources")
@@ -112,9 +113,11 @@ public class Resource {
     @ManyToOne
     private Person contactPerson;
 
-    private boolean protectedUrls;
+    @Column(nullable = false)
+    private boolean protectedUrls = false;
 
-    private boolean renderProtectedLanding;
+    @Column(nullable = false)
+    private boolean renderProtectedLanding = false;
 
     @URL(regexp = "^(http|https).*$")
     private String authHelpUrl;
