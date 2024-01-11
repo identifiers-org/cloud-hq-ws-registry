@@ -19,7 +19,7 @@ import org.springframework.stereotype.Component;
 @Qualifier("PrefixRegistrationRequestValidatorProviderHomeUrl")
 public class PrefixRegistrationRequestValidatorProviderHomeUrl implements PrefixRegistrationRequestValidator {
 
-    private WebPageChecker webPageChecker = WebPageCheckerFactory.getWebPageChecker();
+    private final WebPageChecker webPageChecker = WebPageCheckerFactory.getWebPageChecker();
 
     @Override
     public boolean validate(ServiceRequestRegisterPrefixPayload request) throws PrefixRegistrationRequestValidatorException {
@@ -31,7 +31,7 @@ public class PrefixRegistrationRequestValidatorProviderHomeUrl implements Prefix
         } else if (request.getProviderHomeUrl().length() == 0) {
             throw new PrefixRegistrationRequestValidatorException("Home URL cannot be empty");
         }
-        boolean valid = true;
+        boolean valid;
         try {
             valid = webPageChecker.checkWebPageUrl(request.getProviderHomeUrl());
         } catch (WebPageCheckerException e) {

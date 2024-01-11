@@ -30,8 +30,7 @@ public class AuthHelper {
     public String getCurrentUsername() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (isAuthenticated()) {
-            if (authentication.getPrincipal() instanceof Jwt) {
-                Jwt jwtToken = (Jwt) authentication.getPrincipal();
+            if (authentication.getPrincipal() instanceof Jwt jwtToken) {
                 return jwtToken.getClaims().getOrDefault("preferred_username", "UNKNOWN").toString();
             }
             return "UNKNOWN";

@@ -13,7 +13,7 @@ import org.slf4j.LoggerFactory;
  * ---
  */
 public class RequesterValidatorName implements RequesterValidator {
-    private static Logger logger = LoggerFactory.getLogger(RequesterValidatorName.class);
+    private static final Logger logger = LoggerFactory.getLogger(RequesterValidatorName.class);
 
     @Override
     public boolean validate(Requester requester) throws RequesterValidatorException {

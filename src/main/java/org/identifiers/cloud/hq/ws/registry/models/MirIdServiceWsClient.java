@@ -1,19 +1,15 @@
 package org.identifiers.cloud.hq.ws.registry.models;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.retry.annotation.Backoff;
 import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Component;
-import org.springframework.web.client.RestClientException;
-import org.springframework.web.client.RestTemplate;
+import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.http.HttpStatusCode;
+import reactor.core.publisher.Mono;
 
-import java.io.IOException;
-import java.net.HttpURLConnection;
-import java.net.URL;
+import static org.springframework.util.StringUtils.hasText;
 
 /**
  * Project: registry
@@ -30,17 +26,16 @@ import java.net.URL;
 public class MirIdServiceWsClient implements MirIdService {
     private static final int WS_REQUEST_RETRY_MAX_ATTEMPTS = 12;
     private static final int WS_REQUEST_RETRY_BACK_OFF_PERIOD = 1500; // 1.5 seconds
-    // TODO Remove these timeouts now set by the configuration class
-    private static final int WS_REQUEST_CONNECT_TIMEOUT = 1000; // 1 second
-    private static final int WS_REQUEST_READ_TIMEOUT = 1000; // 1 second
 
     @Value("${org.identifiers.cloud.hq.ws.registry.backend.service.miridcontroller.host}")
     private String wsMirIdControllerHost;
     @Value("${org.identifiers.cloud.hq.ws.registry.backend.service.miridcontroller.port}")
     private String wsMirIdControllerPort;
 
-    @Autowired
-    private RestTemplate restTemplate;
+    private final WebClient webClient;
+    public MirIdServiceWsClient(WebClient webClient) {
+        this.webClient = webClient;
+    }
 
     // Helpers
     private String getMirIdServiceBaseUrl() {
@@ -53,33 +48,19 @@ public class MirIdServiceWsClient implements MirIdService {
         return String.format("%s/mintId", getMirIdServiceBaseUrl());
     }
 
-    private String getWsMirIdKeepingAliveUrl(String mirId) {
-        return String.format("%s/keepAlive/%s", getMirIdServiceBaseUrl(), mirId);
-    }
-
-    private ResponseEntity<?> doGetRequest(String url) {
-        return restTemplate.getForEntity(url, String.class);
-    }
-    // END - Helpers
-
     @Retryable(maxAttempts = WS_REQUEST_RETRY_MAX_ATTEMPTS,
             backoff = @Backoff(delay = WS_REQUEST_RETRY_BACK_OFF_PERIOD))
     @Override
     public String mintId() throws MirIdServiceException {
         log.info("Requesting MIR ID MINTING");
-        String mirId = null;
-        // TODO Refactor this to use the configuration provided REST Template
-        try {
-            ResponseEntity<?> response = doGetRequest(getWsMirIdMintingUrl());
-            if (response.getStatusCode() != HttpStatus.OK) {
-                throw new MirIdServiceException(String.format("MIR ID minting FAILED, status code '%s'", response.getStatusCode().toString()));
-            }
-            if (!response.hasBody()) {
-                throw new MirIdServiceException(String.format("MIR ID minting FAILED, NO BODY IN THE RESPONSE, response -> '%s'", response.toString()));
-            }
-            mirId = response.getBody().toString();
-        } catch (RestClientException e) {
-            throw new MirIdServiceException(e.getMessage());
+        var response = webClient.get().uri(getWsMirIdMintingUrl()).retrieve()
+                .bodyToMono(String.class)
+                .doOnError(error -> {
+                    throw new MirIdServiceException(String.format("MIR ID minting FAILED, %s", error));
+                });
+        String mirId = response.block();
+        if (!hasText(mirId)) {
+            throw new MirIdServiceException(String.format("MIR ID minting FAILED, NO BODY IN THE RESPONSE, response -> '%s'", response));
         }
         log.info(String.format("MIR ID MINTING, newly minted ID '%s'", mirId));
         return mirId;
@@ -90,42 +71,27 @@ public class MirIdServiceWsClient implements MirIdService {
     @Override
     public void keepAlive(String mirId) throws MirIdServiceException {
         log.info(String.format("Requesting '%s' MIR ID to be kept alive", mirId));
-        int status = 0;
-        // TODO Refactor this to use the configuration provided REST Template
-        HttpURLConnection connection = null;
-        try {
-            // TODO Old request method to be removed
-            URL requestUrl = new URL(String.format("%s/keepAlive/%s", getMirIdServiceBaseUrl(), mirId));
-            connection = (HttpURLConnection) requestUrl.openConnection();
-            connection.setInstanceFollowRedirects(false);
-            connection.setConnectTimeout(WS_REQUEST_CONNECT_TIMEOUT);
-            connection.setReadTimeout(WS_REQUEST_READ_TIMEOUT);
-            connection.setRequestMethod("GET");
-            status = connection.getResponseCode();
-            // I'm not interested on the content back from the MIR ID controller, just the HTTP Status
-        } catch (RuntimeException | IOException e) {
-            throw new MirIdServiceException(String.format("MIR ID '%s' keepAlive FAILED, status code '%d'", mirId, status));
-        } finally {
-            if (connection != null) {
-                connection.disconnect();
-            }
-        }
-        if (status >= 500) {
-            // We've got an error on the other side
-            throw new MirIdServiceException(String.format("MIR ID '%s' keepAlive FAILED, status code '%d', " +
-                    "something went WRONG on the other side!", mirId, status));
-        } else if (status >= 400) {
-            // We've got an error on our side
-            log.error(String.format("MIR ID '%s' keepAlive FAILED, status code '%d', " +
-                    "WE did something WRONG", mirId, status));
-        } else if (status >= 300) {
-            // This is a unicorn at this current iteration of the platform development
-            throw new MirIdServiceException(String.format("MIR ID '%s' keepAlive FAILED, status code '%d', " +
-                    "CONGRATULATIONS! YOU FOUND THE UNICORN! Something is deeply wrong because this iteration of the " +
-                    "platform development has no redirections for the MIR ID Controller API Service", mirId, status));
-        } else {
-            // If we get here, it is within the HTTP 2xx status space
-            log.info(String.format("SUCCESS, Request for '%s' MIR ID to be kept alive", mirId));
-        }
+        String requestUrl = String.format("%s/keepAlive/%s", getMirIdServiceBaseUrl(), mirId);
+        webClient.get().uri(requestUrl).retrieve()
+                .onStatus(HttpStatusCode::is5xxServerError, response ->
+                    Mono.error(new MirIdServiceException(String.format(
+                            "MIR ID '%s' keepAlive FAILED, status code '%d', something went WRONG on the other side!",
+                                mirId, response.statusCode().value()))
+                    )
+                )
+                .onStatus(HttpStatusCode::is4xxClientError, response ->
+                    Mono.error(new MirIdServiceException(String.format(
+                            "MIR ID '%s' keepAlive FAILED, status code '%d', WE did something WRONG",
+                                mirId, response.statusCode().value())))
+                )
+                .onStatus(HttpStatusCode::is3xxRedirection, response ->
+                    Mono.error(new MirIdServiceException(String.format(
+                            "MIR ID '%s' keepAlive FAILED, status code '%d', " +
+                             "CONGRATULATIONS! YOU FOUND THE UNICORN! Something is deeply wrong because " +
+                             "this iteration of the platform development has no redirections for the " +
+                             "MIR ID Controller API Service",
+                                mirId, response.statusCode().value())))
+                );
+                log.info(String.format("SUCCESS, Request for '%s' MIR ID to be kept alive", mirId));
     }
 }

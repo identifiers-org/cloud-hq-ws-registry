@@ -26,7 +26,7 @@ import java.util.regex.Pattern;
 @Scope("prototype")
 @Qualifier("PrefixRegistrationRequestValidatorRequestedPrefix")
 public class PrefixRegistrationRequestValidatorRequestedPrefix implements PrefixRegistrationRequestValidator {
-    private static Logger logger = LoggerFactory.getLogger(PrefixRegistrationRequestValidatorRequestedPrefix.class);
+    private static final Logger logger = LoggerFactory.getLogger(PrefixRegistrationRequestValidatorRequestedPrefix.class);
 
     @Autowired
     private NamespaceRepository namespaceRepository;
@@ -54,8 +54,8 @@ public class PrefixRegistrationRequestValidatorRequestedPrefix implements Prefix
             }
         }
 
-        String errorMessage = "--- no error message has been set ---";
-        String shortErrorMessage = "--- no short error message has been set ---";
+        String errorMessage;
+        String shortErrorMessage;
         try {
             Namespace foundNamespace = namespaceRepository.findByPrefix(request.getRequestedPrefix());
             if (foundNamespace != null) {
