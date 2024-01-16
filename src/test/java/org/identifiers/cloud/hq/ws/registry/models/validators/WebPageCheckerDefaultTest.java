@@ -24,14 +24,11 @@ class WebPageCheckerDefaultTest {
 
     @Test
     void testHttpsRewrite() throws IOException {
-        assertThrows(WebPageCheckerException.class, () -> {
-            doReturn(connection).when(checker).getConnection(any());
-            doReturn(HttpStatus.MOVED_PERMANENTLY.value()).when(connection).getResponseCode();
-            doReturn("https://google.com").when(connection).getHeaderField("Location");
-            String url = "http://google.com";
-
-            checker.checkWebPageUrl(url);
-        });
+        doReturn(connection).when(checker).getConnection(any());
+        doReturn(HttpStatus.MOVED_PERMANENTLY.value()).when(connection).getResponseCode();
+        doReturn("https://google.com").when(connection).getHeaderField("Location");
+        String url = "http://google.com";
+        assertThrows(WebPageCheckerException.class, () -> checker.checkWebPageUrl(url));
     }
 
     @Test
@@ -48,42 +45,31 @@ class WebPageCheckerDefaultTest {
     @Test
     void testInvalid3xxResponse() throws IOException {
         for (int r=300; r<=303; r++) {
-            final int finalR = r;
-            assertThrows(WebPageCheckerException.class, () -> {
-                doReturn(connection).when(checker).getConnection(any());
-                doReturn(finalR).when(connection).getResponseCode();
-                String url = "https://google.com";
+            doReturn(connection).when(checker).getConnection(any());
+            doReturn(r).when(connection).getResponseCode();
+            String url = "https://google.com";
 
-                checker.checkWebPageUrl(url);
-            });
+            assertTrue(checker.checkWebPageUrl(url));
         }
     }
 
     @Test
     void testInvalid4xxResponse() throws IOException {
         for (int r=400; r<=417; r++) {
-            final int finalR = r;
-            assertThrows(WebPageCheckerException.class, () -> {
-                doReturn(connection).when(checker).getConnection(any());
-                doReturn(finalR).when(connection).getResponseCode();
-                String url = "https://google.com";
-
-                checker.checkWebPageUrl(url);
-            });
+            doReturn(connection).when(checker).getConnection(any());
+            doReturn(r).when(connection).getResponseCode();
+            String url = "https://google.com";
+            assertThrows(WebPageCheckerException.class, () -> checker.checkWebPageUrl(url));
         }
     }
 
     @Test
     void testInvalid5xxResponse() throws IOException {
         for (int r=500; r<=505; r++) {
-            final int finalR = r;
-            assertThrows(WebPageCheckerException.class, () -> {
-                doReturn(connection).when(checker).getConnection(any());
-                doReturn(finalR).when(connection).getResponseCode();
-                String url = "https://google.com";
-
-                checker.checkWebPageUrl(url);
-            });
+            doReturn(connection).when(checker).getConnection(any());
+            doReturn(r).when(connection).getResponseCode();
+            String url = "https://google.com";
+            assertThrows(WebPageCheckerException.class, () -> checker.checkWebPageUrl(url));
         }
     }
 }

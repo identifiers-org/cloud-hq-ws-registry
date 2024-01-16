@@ -11,7 +11,7 @@ services:
         ports:
             - "5430:5432"
         volumes:
-            - "/Users/rjuacaba/Workspace/idorg/db/registry:/docker-entrypoint-initdb.d"
+            - "../db/registry:/docker-entrypoint-initdb.d"
     miridpostgresql:
         image: postgres
         environment:

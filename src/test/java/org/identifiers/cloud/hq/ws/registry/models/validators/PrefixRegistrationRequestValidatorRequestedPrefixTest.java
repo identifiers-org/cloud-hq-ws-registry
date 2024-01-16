@@ -3,13 +3,12 @@ package org.identifiers.cloud.hq.ws.registry.models.validators;
 import org.identifiers.cloud.hq.ws.registry.api.requests.ServiceRequestRegisterPrefixPayload;
 import org.identifiers.cloud.hq.ws.registry.data.models.Namespace;
 import org.identifiers.cloud.hq.ws.registry.data.repositories.NamespaceRepository;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Primary;
+import org.springframework.boot.test.mock.mockito.MockBean;
 
 import java.util.function.Function;
 
@@ -17,21 +16,17 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.mock;
 
 @SpringBootTest
 class PrefixRegistrationRequestValidatorRequestedPrefixTest {
-    @Configuration
-    static class MockedRepositoriesTestConfiguration {
-        @Bean @Primary
-        NamespaceRepository getMockedNamespaceRespository() {
-            NamespaceRepository mockedNsRepo = mock(NamespaceRepository.class);
-            Namespace ns = new Namespace().setPrefix("namespace1");
-            doReturn(null).when(mockedNsRepo).findByPrefix(anyString());
-            doReturn(ns).when(mockedNsRepo).findByPrefix("namespace1");
+    @MockBean
+    NamespaceRepository namespaceRepository;
 
-            return mockedNsRepo;
-        }
+    @BeforeEach
+    void setupMockedNamespaceRespository() {
+        Namespace ns = new Namespace().setPrefix("namespace1");
+        doReturn(null).when(namespaceRepository).findByPrefix(anyString());
+        doReturn(ns).when(namespaceRepository).findByPrefix("namespace1");
     }
 
     @Autowired

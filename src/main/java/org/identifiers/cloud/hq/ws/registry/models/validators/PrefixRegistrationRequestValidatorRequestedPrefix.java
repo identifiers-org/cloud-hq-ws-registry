@@ -7,7 +7,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import java.util.regex.Matcher;
@@ -23,7 +22,7 @@ import java.util.regex.Pattern;
  */
 // We don't need qualifier here?
 @Component
-@Scope("prototype")
+//@Scope("prototype")
 @Qualifier("PrefixRegistrationRequestValidatorRequestedPrefix")
 public class PrefixRegistrationRequestValidatorRequestedPrefix implements PrefixRegistrationRequestValidator {
     private static final Logger logger = LoggerFactory.getLogger(PrefixRegistrationRequestValidatorRequestedPrefix.class);
