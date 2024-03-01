@@ -1,5 +1,6 @@
 package org.identifiers.cloud.hq.ws.registry.models.validators;
 
+import io.micrometer.common.util.StringUtils;
 import org.identifiers.cloud.hq.ws.registry.api.data.models.Requester;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,7 +18,7 @@ public class RequesterValidatorName implements RequesterValidator {
 
     @Override
     public boolean validate(Requester requester) throws RequesterValidatorException {
-        if (requester.getName() == null || requester.getName().length() == 0) {
+        if (StringUtils.isBlank(requester.getName())) {
             logger.info("Requester name is required");
             throw new PrefixRegistrationRequestValidatorException("Requester name cannot be empty");
         }

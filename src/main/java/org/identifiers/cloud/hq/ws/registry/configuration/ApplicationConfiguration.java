@@ -1,26 +1,15 @@
 package org.identifiers.cloud.hq.ws.registry.configuration;
 
-import java.time.Duration;
 import java.util.Properties;
 
-import io.netty.channel.ChannelOption;
-import io.netty.handler.timeout.ReadTimeoutHandler;
-import io.netty.handler.timeout.WriteTimeoutHandler;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Profile;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
-import org.springframework.http.client.reactive.ReactorClientHttpConnector;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.retry.annotation.EnableRetry;
-import org.springframework.security.oauth2.client.registration.ReactiveClientRegistrationRepository;
-import org.springframework.security.oauth2.client.web.reactive.function.client.ServerOAuth2AuthorizedClientExchangeFilterFunction;
-import org.springframework.security.oauth2.client.web.server.ServerOAuth2AuthorizedClientRepository;
-import org.springframework.web.reactive.function.client.WebClient;
-
-import reactor.netty.http.client.HttpClient;
+import org.springframework.web.client.RestTemplate;
 
 /**
  * Project: registry
@@ -34,39 +23,10 @@ import reactor.netty.http.client.HttpClient;
 @EnableJpaAuditing
 @EnableRetry
 public class ApplicationConfiguration {
-    private static final Duration WS_REQUEST_TIMEOUT = Duration.ofSeconds (2);
-
-    HttpClient httpClient() {
-        return HttpClient.create()
-                .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, (int)WS_REQUEST_TIMEOUT.toMillis())
-                .responseTimeout(WS_REQUEST_TIMEOUT)
-                .doOnConnected(conn ->
-                        conn.addHandlerLast(new ReadTimeoutHandler((int)WS_REQUEST_TIMEOUT.toSeconds()))
-                            .addHandlerLast(new WriteTimeoutHandler((int)WS_REQUEST_TIMEOUT.toSeconds())));
-    }
-
-
     @Bean
-    @Profile("authenabled")
-    WebClient webClient(ReactiveClientRegistrationRepository clientRegistrations,
-                        ServerOAuth2AuthorizedClientRepository authorizedClients) {
-        var oauth = new ServerOAuth2AuthorizedClientExchangeFilterFunction(
-                clientRegistrations, authorizedClients);
-        oauth.setDefaultOAuth2AuthorizedClient(true);
-
-        return WebClient.builder()
-                .clientConnector(new ReactorClientHttpConnector(httpClient()))
-                .filter(oauth)
-                .build();
-    }
-
-    @Bean
-    @Profile("!authenabled")
-    public WebClient webClientNoAuth() {
-        var clientConnector = new ReactorClientHttpConnector(httpClient());
-        return WebClient.builder()
-                .clientConnector(clientConnector)
-                .build();
+    public RestTemplate getRestTemplate() {
+        // To enable testing
+        return new RestTemplate();
     }
 
     @Bean

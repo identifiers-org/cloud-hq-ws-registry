@@ -1,5 +1,6 @@
 package org.identifiers.cloud.hq.ws.registry.models.validators;
 
+import io.micrometer.common.util.StringUtils;
 import org.identifiers.cloud.hq.ws.registry.api.requests.ServiceRequestRegisterPrefixPayload;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Scope;
@@ -28,7 +29,7 @@ public class PrefixRegistrationRequestValidatorProviderHomeUrl implements Prefix
         if (request.getProviderHomeUrl() == null) {
         // TODO In future iterations, use a different mechanism for reporting back why this is not valid, and leave exceptions for non-recoverable conditions
             throw new PrefixRegistrationRequestValidatorException("Provider home URL is required");
-        } else if (request.getProviderHomeUrl().length() == 0) {
+        } else if (StringUtils.isBlank(request.getProviderHomeUrl())) {
             throw new PrefixRegistrationRequestValidatorException("Home URL cannot be empty");
         }
         boolean valid;

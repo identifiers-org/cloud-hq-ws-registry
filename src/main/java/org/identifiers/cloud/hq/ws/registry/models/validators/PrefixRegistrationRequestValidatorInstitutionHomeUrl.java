@@ -1,5 +1,6 @@
 package org.identifiers.cloud.hq.ws.registry.models.validators;
 
+import io.micrometer.common.util.StringUtils;
 import org.identifiers.cloud.hq.ws.registry.api.requests.ServiceRequestRegisterPrefixPayload;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Scope;
@@ -27,7 +28,7 @@ public class PrefixRegistrationRequestValidatorInstitutionHomeUrl implements Pre
         // Home Page URL for the resource is required
         if (request.getInstitutionHomeUrl() == null) {
             throw new PrefixRegistrationRequestValidatorException("MISSING URL for a Institution");
-        } else if (request.getInstitutionHomeUrl().length() == 0) {
+        } else if (StringUtils.isBlank(request.getInstitutionHomeUrl())) {
             throw new PrefixRegistrationRequestValidatorException("Home URL cannot be empty");
         }
         boolean valid;

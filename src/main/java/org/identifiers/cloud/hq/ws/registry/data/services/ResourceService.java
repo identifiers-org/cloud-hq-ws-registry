@@ -97,7 +97,7 @@ public class ResourceService {
         try {
             log.info(String.format("RESOURCE REGISTRATION REQUEST - ACCEPT\n'%s'", objectMapper.writeValueAsString(resource)));
         } catch (JsonProcessingException e) {
-            e.printStackTrace();
+            log.error("Error parsing resource to json during appendResourceToNamespace", e);
         }
         if (resource.getMirId() == null) {
             // Request a MIR ID

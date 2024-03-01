@@ -19,12 +19,8 @@ import org.springframework.stereotype.Component;
 public class AuthHelper {
     // Helpers
     private boolean isAuthenticated() {
-        if (SecurityContextHolder.getContext().getAuthentication().getPrincipal() instanceof String) {
-            if (SecurityContextHolder.getContext().getAuthentication().getPrincipal().equals("anonymousUser")) {
-                return false;
-            }
-        }
-        return true;
+        var principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return !(principal instanceof String) || !principal.equals("anonymousUser");
     }
     
     public String getCurrentUsername() {

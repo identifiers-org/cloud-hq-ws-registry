@@ -1,5 +1,6 @@
 package org.identifiers.cloud.hq.ws.registry.models.validators;
 
+import io.micrometer.common.util.StringUtils;
 import org.identifiers.cloud.hq.ws.registry.api.requests.ServiceRequestRegisterPrefixPayload;
 
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -23,7 +24,7 @@ public class PrefixRegistrationRequestValidatorAuthHelpUrl implements PrefixRegi
     @Override
     public boolean validate(ServiceRequestRegisterPrefixPayload request) throws PrefixRegistrationRequestValidatorException {
         if (request.isProtectedUrls()) {
-            if (request.getAuthHelpUrl() == null || request.getAuthHelpUrl().trim().length() == 0) {
+            if (StringUtils.isBlank(request.getAuthHelpUrl())) {
                 throw new PrefixRegistrationRequestValidatorException("MISSING required authentication info URL");
             }
             if (!request.getAuthHelpUrl().toLowerCase().startsWith("http")) {
