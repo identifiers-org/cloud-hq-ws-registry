@@ -100,6 +100,7 @@ public class SecurityConfiguration {
                     .requestMatchers(HttpMethod.HEAD, "/restApi/namespaces/**").permitAll()
                     .requestMatchers(HttpMethod.POST, "/restApi/namespaces/**").hasAuthority("restApiNamespacePost")
                     .requestMatchers(HttpMethod.PUT, "/restApi/namespaces/**").hasAuthority("restApiNamespacePut")
+                    .requestMatchers(HttpMethod.PUT, "/restApi/namespaces/*/successor").hasAuthority("restApiNamespaceSuccessorPut")
                     .requestMatchers(HttpMethod.PATCH, "/restApi/namespaces/**").hasAuthority("restApiNamespacePatch")
                     .requestMatchers(HttpMethod.DELETE, "/restApi/namespaces/**").denyAll()
                 // REST Repository - Namespace Synonyms
@@ -280,7 +281,8 @@ public class SecurityConfiguration {
                 // Actuators
                     .requestMatchers(HttpMethod.GET, "/actuator/health/**").permitAll()
                     .requestMatchers("/actuator").hasAuthority(actuatorRequiredRole)
-                    .requestMatchers("/actuator/loggers/**").hasAuthority(actuatorRequiredRole) )
+                    .requestMatchers("/actuator/loggers/**").hasAuthority(actuatorRequiredRole)
+                    .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll())
                 .csrf(csrf -> csrf.ignoringRequestMatchers(
                         "/prefixRegistrationApi/registerPrefix",
                                 "/prefixRegistrationApi/validate*",
@@ -295,7 +297,6 @@ public class SecurityConfiguration {
     }
 
     @Bean
-    @Profile("authenabled")
     CorsConfigurationSource corsConfigurationSource(
             @Value("${org.identifiers.cloud.hq.ws.registry.cors.origin}") String corsOrigins
     ) {
@@ -318,6 +319,7 @@ public class SecurityConfiguration {
     public SecurityFilterChain filterChainDev(HttpSecurity http) throws Exception {
         log.info("[CONFIG] NO AUTH configuration loaded");
         http.authorizeHttpRequests(authorize -> authorize.anyRequest().permitAll())
+                .cors(withDefaults())
                 .formLogin(AbstractHttpConfigurer::disable)
                 .logout(AbstractHttpConfigurer::disable)
                 .csrf(AbstractHttpConfigurer::disable);
