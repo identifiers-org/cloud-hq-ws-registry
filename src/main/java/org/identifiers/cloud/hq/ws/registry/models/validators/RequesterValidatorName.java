@@ -1,6 +1,6 @@
 package org.identifiers.cloud.hq.ws.registry.models.validators;
 
-import io.micrometer.common.util.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.identifiers.cloud.hq.ws.registry.api.data.models.Requester;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
