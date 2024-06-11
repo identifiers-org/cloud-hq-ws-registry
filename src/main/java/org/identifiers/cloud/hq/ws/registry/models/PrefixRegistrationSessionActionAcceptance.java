@@ -1,8 +1,8 @@
 package org.identifiers.cloud.hq.ws.registry.models;
 
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
@@ -19,13 +19,17 @@ import java.util.List;
  * <p>
  * Composite action to perform upon prefix registration session completion
  */
-@Slf4j
 @Component
-@RequiredArgsConstructor
+@Slf4j
 @Qualifier("PrefixRegistrationSessionActionAcceptance")
 public class PrefixRegistrationSessionActionAcceptance implements PrefixRegistrationSessionCompositeSequenceAction {
-    private final PrefixRegistrationSessionActionLogger actionLogger;
-    private final PrefixRegistrationSessionActionEmailNotifier prefixAcceptanceEmailNotificationAction;
+    // This is one of things of the inversion of control (IOC) that I may not be getting quite right and I hope I get
+    // better on it in the future
+
+    @Autowired
+    private PrefixRegistrationSessionActionLogger actionLogger;
+    @Autowired
+    private PrefixRegistrationSessionActionNotifierEmailAcceptance actionNotifierEmailAcceptance;
 
     @Override
     public Logger getLogger() {
@@ -39,9 +43,12 @@ public class PrefixRegistrationSessionActionAcceptance implements PrefixRegistra
 
     @Override
     public List<PrefixRegistrationSessionAction> buildActionSequence() {
+        // TODO
+        // TODO - Right now we just log the closing of the prefix registration session, but in the future there will be
+        //  notifications and other actions triggered by an accepted prefix registration request
         return Arrays.asList(
                 actionLogger,
-                prefixAcceptanceEmailNotificationAction
+                actionNotifierEmailAcceptance
         );
     }
 

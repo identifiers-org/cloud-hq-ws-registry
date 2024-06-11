@@ -1,8 +1,8 @@
 package org.identifiers.cloud.hq.ws.registry.models;
 
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
@@ -17,14 +17,16 @@ import java.util.List;
  * @author Manuel Bernal Llinares <mbdebian@gmail.com>
  * ---
  */
-@Slf4j
 @Component
-@RequiredArgsConstructor
+@Slf4j
 @Qualifier("ResourceRegistrationSessionActionStart")
 public class ResourceRegistrationSessionActionStart implements ResourceRegistrationSessionCompositeSequenceAction {
-    private final ResourceRegistrationSessionActionLogger actionLogger;
-    private final ResourceRegistrationSessionActionEmailNotifier resourceCuratorStartEmailNotificationAction;
-    private final ResourceRegistrationSessionActionEmailNotifier resourceRequesterStartEmailNotificationAction;
+    @Autowired
+    private ResourceRegistrationSessionActionLogger actionLogger;
+    @Autowired
+    private ResourceRegistrationSessionActionNotifierEmailCuratorStart actionNotifierEmailCuratorStart;
+    @Autowired
+    private ResourceRegistrationSessionActionNotifierEmailRequesterStart actionNotifierEmailRequesterStart;
 
     @Override
     public Logger getLogger() {
@@ -40,8 +42,8 @@ public class ResourceRegistrationSessionActionStart implements ResourceRegistrat
     public List<ResourceRegistrationSessionAction> buildActionSequence() {
         return Arrays.asList(
                 actionLogger,
-                resourceCuratorStartEmailNotificationAction,
-                resourceRequesterStartEmailNotificationAction
+                actionNotifierEmailCuratorStart,
+                actionNotifierEmailRequesterStart
         );
     }
 }
