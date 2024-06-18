@@ -6,6 +6,7 @@ import org.identifiers.cloud.hq.ws.registry.configuration.CommonEmailProperties;
 import org.springframework.core.env.Environment;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
+import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.retry.annotation.Backoff;
@@ -64,16 +65,25 @@ public abstract class RegistrationSessionActionEmailNotifier <S, R> {
                                     getPrefixFromSession(session));
     }
 
-    // Interface
     @Retryable(maxAttempts = MAIL_REQUEST_RETRY_MAX_ATTEMPTS,
             backoff = @Backoff(delay = MAIL_REQUEST_RETRY_BACK_OFF_PERIOD))
     public R performAction(S session) throws PrefixRegistrationSessionActionException {
         R report = newReport();
-        // Get a plain text message
+
         SimpleMailMessage emailMessage = getBaseEmailMessage(session);
         emailMessage.setSubject(parseEmailSubject(session));
         emailMessage.setText(parseEmailBody(session));
-        javaMailSender.send(emailMessage);
+
+        try {
+            // Avoid risk of rolling back other actions
+            //   (e.g. prefix requests) on email error
+            javaMailSender.send(emailMessage);
+        } catch (MailException ex) {
+            var msg = String.format("Failed to send notification mail \"%s\"",
+                    emailMessage.getSubject());
+            log.error(msg, ex);
+        }
+
         // TODO It would be nice to set something on the report
         return report;
     }
@@ -81,12 +91,14 @@ public abstract class RegistrationSessionActionEmailNotifier <S, R> {
     private SimpleMailMessage getBaseEmailMessage(S session) {
         String requesterEmail = getRequesterEmailFromSession(session);
         SimpleMailMessage emailMessage = new SimpleMailMessage();
-        // Set message parameters
+
         emailMessage.setFrom(emailCommons.getEmailSender());
         emailMessage.setReplyTo(emailCommons.getEmailReplyTo());
         emailMessage.setTo(requesterEmail);
-        if (!emailCc.equals(emailCommons.getPlaceholderDoNotUse())) emailMessage.setCc(emailCc.split(","));
-        if (!emailBcc.equals(emailCommons.getPlaceholderDoNotUse())) emailMessage.setBcc(emailBcc.split(","));
+        if (!emailCc.equals(emailCommons.getPlaceholderDoNotUse()))
+            emailMessage.setCc(emailCc.split(","));
+        if (!emailBcc.equals(emailCommons.getPlaceholderDoNotUse()))
+            emailMessage.setBcc(emailBcc.split(","));
         return emailMessage;
     }
 }
