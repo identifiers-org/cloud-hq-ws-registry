@@ -60,7 +60,7 @@ public class ResolutionApiModel {
         for (Resource resource : namespace.getResources()) {
             String urlPattern = resource.getUrlPattern();
             int templateVarIdx = urlPattern.indexOf("{$id}");
-            int prefixExpectedStart = templateVarIdx - prefix.length() - 1; // -1 to account for color (:) character
+            int prefixExpectedStart = templateVarIdx - prefix.length() - 1; // -1 to account for colon (:) character
             String possiblePrefix = urlPattern.substring(prefixExpectedStart, templateVarIdx);
 
             if (possiblePrefix.equalsIgnoreCase(prefix + ':')) {
